@@ -1,4 +1,5 @@
 <?php
+ini_set('memory_limit', '-1');
 
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -15,14 +16,16 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 */
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
-    'middleware' => [ 'localeSessionRedirect', 'localizationRedirect' ]
-], function()
-{
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect']
+], function () {
     Route::get('/', 'HomeController')->name('home');
 
     Route::get('/domain/{hash}', 'LandingpageController@domain')->name('landingpage.domain');
     Route::post('/send-inquiry', 'LandingpageController@send')->name('landingpage.send');
 
+    Route::get('/test', function () {
+
+    });
     Route::get('/impressum', 'StaticController@imprint')->name('static.imprint');
     Route::get('/datenschutz', 'StaticController@dataPrivacy')->name('static.dataprivacy');
     Route::get('/bildnachweise', 'StaticController@imageLicences')->name('static.imagelicences');

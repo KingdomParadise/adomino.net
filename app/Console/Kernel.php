@@ -19,26 +19,23 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('import-domains')
-            ->dailyAt('04:00')
-            ->timezone('Europe/Vienna');
-
         $schedule->command('daily-visits')
-            ->dailyAt('00:00')
-            ->timezone('Europe/Vienna');
-
+            ->dailyAt('00:02')
+            ->timezone('Europe/Vienna')->runInBackground();
         $schedule->command('add-daily-visits-to-adomino-com')
             ->dailyAt('00:15')
-            ->timezone('Europe/Vienna');
-
+            ->timezone('Europe/Vienna')->runInBackground();
         $schedule->command('add-total-to-visits-per-day')
             ->dailyAt('00:30')
-            ->timezone('Europe/Vienna');
+            ->timezone('Europe/Vienna')->runInBackground();
+        $schedule->command('import-domains')
+            ->dailyAt('04:00')
+            ->timezone('Europe/Vienna')->runInBackground();
     }
 
     /**
@@ -48,7 +45,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

@@ -25,6 +25,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         Nova::userTimezone(function () {
             return 'Europe/Vienna';
         });
+        Nova::style('admin', public_path('css/nova.css'));
+        Nova::script('admin', public_path('js/nova.js'));
     }
 
     /**
@@ -35,9 +37,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function routes()
     {
         Nova::routes()
-                ->withAuthenticationRoutes()
-                ->withPasswordResetRoutes()
-                ->register();
+            ->withAuthenticationRoutes()
+            ->withPasswordResetRoutes()
+            ->register();
     }
 
     /**
@@ -52,6 +54,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         Gate::define('viewNova', function ($user) {
             return in_array($user->email, [
                 'info@goinnovative.de',
+                'admin@gmail.com',
                 'harald.hochmann@gmx.net',
             ]);
         });
@@ -66,6 +69,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     {
         return [
             new Help,
+            new \Mako\CustomTableCard\CustomTableCard,
         ];
     }
 

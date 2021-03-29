@@ -21,6 +21,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.1",
         "laravelcollective/html": "^6.1",
+        "m-a-k-o/nova-custom-table-card": "^3.2",
         "mcamara/laravel-localization": "^1.5",
         "michielkempen/nova-order-field": "^2.0",
         "spatie/laravel-translatable": "^4.5",

@@ -2,6 +2,9 @@
 
 namespace App\Console\Commands;
 
+ini_set('memory_limit', '-1');
+set_time_limit(0);
+
 use App\DailyVisit;
 use App\Domain;
 use Illuminate\Console\Command;
@@ -31,50 +34,53 @@ class AddDailyVisitsToAdominoCom extends Command
      */
     public function handle()
     {
+        ini_set('memory_limit', '-1');
+        set_time_limit(0);
+        Log::info('Daily visits started');
         ssh_tunnel_call();
+        $dailyVistsCounter = DailyVisit::where('adomino_com_ok', false)->count();
+        if (!empty($dailyVistsCounter)) {
+            $count = (string)$dailyVistsCounter;
+            $loopCount = ceil(($count / 100000));
+            for ($i = 0; $i < $loopCount; $i++) {
+                $dailyVisits = DailyVisit::where('adomino_com_ok', false)->limit(100000)->get();
+                foreach ($dailyVisits as $visit) {
+                    $domain = Domain::find($visit->domain_id);
+                    // If domain not found or doesn't have adomino_com_id, skip this visit
+                    if (!isset($domain) || !isset($domain->adomino_com_id)) continue;
 
-        $dailyVisits = DailyVisit::where('adomino_com_ok', false)->get();
+                    $record = DB::connection('adomino_com')
+                        ->table('dv_stats_requests')
+                        ->where('datum', $visit->day->format('Y-m-d'))
+                        ->where('domainid', $domain->adomino_com_id)
+                        ->where('stunde', 0)
+                        ->first();
 
-        foreach ($dailyVisits as $visit) {
-            $domain = Domain::find($visit->domain_id);
+                    if ($record) {
+                        DB::connection('adomino_com')
+                            ->table('dv_stats_requests')
+                            ->where('datum', "'" . $visit->day->format('Y-m-d') . "'")
+                            ->where('domainid', $domain->adomino_com_id)
+                            ->where('stunde', 0)
+                            ->increment('num', $visit->visits);
+                        $visit->total = $visit->visits + $record->num;
+                    } else {
+                        DB::connection('adomino_com')
+                            ->table('dv_stats_requests')
+                            ->insert([
+                                'datum' => (string)$visit->day->format('Y-m-d'),
+                                'domainid' => $domain->adomino_com_id,
+                                'stunde' => 0,
+                                'num' => $visit->visits,
+                            ]);
 
-            // If domain not found or doesn't have adomino_com_id, skip this visit
-            if( !isset($domain) || !isset($domain->adomino_com_id) ) continue;
-
-            $record = DB::connection('adomino_com')
-                ->table('dv_stats_requests')
-                ->where('datum', $visit->day)
-                ->where('domainid', $domain->adomino_com_id)
-                ->where('stunde', 0)
-                ->first();
-
-            if ($record) {
-                DB::connection('adomino_com')
-                    ->table('dv_stats_requests')
-                    ->where('datum', $visit->day)
-                    ->where('domainid', $domain->adomino_com_id)
-                    ->where('stunde', 0)
-                    ->increment('num', $visit->visits);
-
-                $visit->total = $visit->visits + $record->num;
-            } else {
-                DB::connection('adomino_com')
-                    ->table('dv_stats_requests')
-                    ->insert([
-                        'datum' => $visit->day,
-                        'domainid' => $domain->adomino_com_id,
-                        'stunde' => 0,
-                        'num' => $visit->visits,
-                    ]);
-
-                $visit->total = $visit->visits;
+                        $visit->total = $visit->visits;
+                    }
+                    $visit->adomino_com_ok = true;
+                    $visit->save();
+                }
             }
-            $visit->adomino_com_ok = true;
-            $visit->save();
         }
-
-        Log::info('Daily visits inserted successfully in adomino com.', [
-            'daily_visits' => $dailyVisits
-        ]);
+        Log::info('Daily visits inserted successfully in adomino com.');
     }
 }

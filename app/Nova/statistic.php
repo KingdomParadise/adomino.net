@@ -4,46 +4,28 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Visit extends Resource
+class statistic extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Visit::class;
-
-    /**
-     * Get the displayable label of the resource.
-     *
-     * @return string
-     */
-    public static function label()
-    {
-        return __('Aufrufe IP');
-    }
-
-    /**
-     * Get the displayable singular label of the resource.
-     *
-     * @return string
-     */
-    public static function singularLabel()
-    {
-        return __('Aufrufe IP');
-    }
+    public static $model = \App\statistic::class;
+//    public static $displayInNavigation = false;
+    public static $perPageOptions = [500];
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'id';
+//    public static $title = 'id';
 
     /**
      * The columns that should be searched.
@@ -54,13 +36,8 @@ class Visit extends Resource
         'id',
     ];
 
-    /**
-     * The relationship columns that should be searched.
-     *
-     * @var array
-     */
-    public static $searchRelations = [
-        'domain' => ['domain'],
+    public static $indexDefaultOrder = [
+        'domain_id' => 'asc'
     ];
 
     /**
@@ -71,15 +48,17 @@ class Visit extends Resource
      */
     public function fields(Request $request)
     {
-        return [
-            DateTime::make('Erstellt am', 'created_at')
-                ->format('YYYY-MM-DD HH:mm'),
+        return \App\statistic::getColumnNames();
+    }
 
-            BelongsTo::make('Domain'),
-
-            Text::make('IP', 'ip')
-                ->sortable(),
-        ];
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+//        array_push(self::$perPageOptions, \App\statistic::getContentCount());
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+            return $query->orderBy(key(static::$indexDefaultOrder), reset(static::$indexDefaultOrder));
+        }
+        return $query;
     }
 
     /**
@@ -90,7 +69,17 @@ class Visit extends Resource
      */
     public function cards(Request $request)
     {
-        return [];
+        return [
+//            (new \Mako\CustomTableCard\CustomTableCard())
+//                ->header(['Id', 'Name', 'Date'])
+//                ->data([
+//                    [
+//                        'view' => '/resources/orders/1',
+//                        'columns' => [1, 'John Doe', '2018-08-28']
+//                    ]
+//                ])
+//                ->title('Orders'),
+        ];
     }
 
     /**
@@ -130,4 +119,30 @@ class Visit extends Resource
     {
         return 'statistics';
     }
+
+    public static function authorizedToCreate(Request $request)
+    {
+        return false;
+    }
+
+    public function authorizedToView(Request $request)
+    {
+        return false;
+    }
+
+    public function authorizedToDelete(Request $request)
+    {
+        return false;
+    }
+
+    public function authorizedToUpdate(Request $request)
+    {
+        return false;
+    }
+
+    public static function label()
+    {
+        return __('STATISTIK');
+    }
+
 }

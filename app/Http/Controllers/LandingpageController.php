@@ -81,7 +81,7 @@ class LandingpageController extends Controller
                 $recaptchaResponse->getScore(),
                 $language,
                 $dateTime,
-                LaravelLocalization::getCurrentLocale(),
+                LaravelLocalization::getCurrentLocale()
             ));
 
         $domain = Domain::where('domain', $request->domain)->firstOrFail();
@@ -142,7 +142,7 @@ class LandingpageController extends Controller
                     $language,
                     date('Y-m-d H:i'),
                     LaravelLocalization::getCurrentLocale(),
-                    'FEHLER - ',
+                    'FEHLER - '
                 ));
         }
 

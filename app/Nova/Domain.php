@@ -42,6 +42,11 @@ class Domain extends Resource
         return __('Domain');
     }
 
+    public static function getParent()
+    {
+        return 'Resources';
+    }
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
@@ -68,7 +73,7 @@ class Domain extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function fields(Request $request)
@@ -85,9 +90,10 @@ class Domain extends Resource
                 }
                 return $info;
             }),
-            Text::make('Domain')->rules('required', 'max:255'),
+            Text::make('Domain')->rules('required', 'max:255')->sortable(),
             Text::make('Titel', 'title')->rules('max:255'),
-            Number::make('adomino.com ID', 'adomino_com_id')->rules('min:0')->readonly(),
+            Number::make('adomino.com ID', 'adomino_com_id')->rules('unique:domains,adomino_com_id,' . $this->id)->sortable(),
+//                ->rules('min:0')->readonly(),
             Select::make('Landingpage-Modus', 'landingpage_mode')->options([
                 'price_evaluation' => 'Domain Preis-Evaluierung',
                 'review' => 'Domain in Prüfung',
@@ -110,7 +116,7 @@ class Domain extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function cards(Request $request)
@@ -121,7 +127,7 @@ class Domain extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function filters(Request $request)
@@ -136,7 +142,7 @@ class Domain extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function lenses(Request $request)
@@ -147,7 +153,7 @@ class Domain extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function actions(Request $request)

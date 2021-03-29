@@ -33,8 +33,9 @@ class AddTotalToVisitsPerDays extends Command
      */
     public function handle()
     {
+        ini_set('memory_limit', '-1');
+        set_time_limit(0);
         $day = $this->argument('day') ?: 1;
-
         for ($i = 1; $i <= $day; $i++) {
             $date = now()->subDays($i);
 
@@ -43,13 +44,11 @@ class AddTotalToVisitsPerDays extends Command
 
             if (!$columnExist) {
                 Schema::table('visits_per_days', function (Blueprint $table) use ($columnName) {
-                    $table->integer($columnName)->default(0);
+                    $table->integer($columnName)->default(0)->index();
                 });
             }
         }
-
         $dailyVisits = DailyVisit::where('day', '>=', $date->format('Y-m-d'))->get();
-
         foreach ($dailyVisits as $dailyVisit) {
             if ($dailyVisit->total == null) {
                 $dailyVisit->total = 0;
@@ -58,19 +57,16 @@ class AddTotalToVisitsPerDays extends Command
                 ['domain_id' => $dailyVisit->domain_id],
                 ['day' . $dailyVisit->day->format('Ymd') => $dailyVisit->total]
             );
-
-            $dailyVisit->delete();
+//            $dailyVisit->delete();
         }
 
         $existingDomains = VisitsPerDay::pluck('domain_id')->unique()->toArray();
         $nonAddedDomainsIds = Domain::whereNotIn('id', $existingDomains)->pluck('id');
-
         foreach ($nonAddedDomainsIds as $id) {
             VisitsPerDay::updateOrCreate(
-                ['domain_id' => $id],
+                ['domain_id' => $id]
             );
         }
-
         Log::info('Data added to visits per days table.', [
             'daily_visits' => $dailyVisits,
         ]);

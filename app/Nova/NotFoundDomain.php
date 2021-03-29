@@ -117,4 +117,9 @@ class NotFoundDomain extends Resource
     {
         return [];
     }
+
+    public static function getParent()
+    {
+        return 'Resources';
+    }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\{DailyVisit, Visit, Domain};
+use App\{
+    DailyVisit, Visit, Domain
+};
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -30,11 +32,12 @@ class DailyVisits extends Command
      */
     public function handle()
     {
-        $visits = Visit::where('created_at', '<', now()->format('Y-m-d'));
-
+        ini_set('memory_limit', '-1');
+        set_time_limit(0);
+        $visits = Visit::where('created_at', 'like', date('Y-m-d', strtotime('-1 day')) . "%");
         $dailyVisits = $visits->get()->groupBy(function ($item) {
-                return $item['created_at']->format('Y-m-d');
-            })
+            return $item['created_at']->format('Y-m-d');
+        })
             ->map(function ($visits, $date) {
                 return $visits
                     ->groupBy('domain_id')
@@ -56,7 +59,7 @@ class DailyVisits extends Command
             'daily_visits' => $dailyVisits
         ]);
 
-        $visits->delete();
+//        $visits->delete();
         Log::info('Visits deleted successfully.');
     }
 }

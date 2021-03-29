@@ -47,6 +47,11 @@ class Logo extends Resource
         return __('Logo');
     }
 
+    public static function getParent()
+    {
+        return 'Resources';
+    }
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
@@ -73,7 +78,7 @@ class Logo extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function fields(Request $request)
@@ -92,14 +97,14 @@ class Logo extends Resource
 
                     $path = storage_path('app/' . $storagePath . $fileName);
 
-                    if(!Storage::disk('local')->exists($storagePath)) {
+                    if (!Storage::disk('local')->exists($storagePath)) {
                         Storage::disk('local')->makeDirectory($storagePath);
                     }
 
                     Cropper::make($request->logo)->resize(80, 40, function ($c) {
                         $c->aspectRatio();
                     })->resizeCanvas(80, 40, 'center', false, array(255, 255, 255, 0))
-                    ->save($path);
+                        ->save($path);
 
                     return '/logos/' . $fileName;
                 })
@@ -117,7 +122,7 @@ class Logo extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function cards(Request $request)
@@ -128,7 +133,7 @@ class Logo extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function filters(Request $request)
@@ -139,7 +144,7 @@ class Logo extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function lenses(Request $request)
@@ -150,7 +155,7 @@ class Logo extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function actions(Request $request)

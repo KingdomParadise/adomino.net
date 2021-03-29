@@ -25,7 +25,7 @@ class DailyVisit extends Resource
      */
     public static function label()
     {
-        return __('Tägliche Aufrufe');
+        return __('Aufrufe Tag');
     }
 
     /**
@@ -35,7 +35,12 @@ class DailyVisit extends Resource
      */
     public static function singularLabel()
     {
-        return __('Täglicher Aufruf');
+        return __('Aufrufe Tag');
+    }
+
+    public static function getParent()
+    {
+        return 'statistics';
     }
 
     /**
@@ -66,28 +71,28 @@ class DailyVisit extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function fields(Request $request)
     {
         return [
+            Date::make('Day', 'day')
+                ->format('YYYY-MM-DD')->sortable(),
             BelongsTo::make('Domain'),
-
-            Date::make('Tag', 'day')
-                ->format('YYYY-MM-DD'),
-
-            Number::make('Aufrufe', 'visits')
+            Number::make('Visits_Adomino_net', 'visits')
                 ->sortable(),
-
-            Boolean::make('XXX_Adomino_Com_Ok', 'adomino_com_ok')
+            Number::make('Visits_Adomino_com'),
+            Boolean::make('Adomino_com_OK', 'adomino_com_ok'),
+            Number::make('Visits_Total', 'total')
+                ->sortable(),
         ];
     }
 
     /**
      * Get the cards available for the request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function cards(Request $request)
@@ -98,7 +103,7 @@ class DailyVisit extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function filters(Request $request)
@@ -109,7 +114,7 @@ class DailyVisit extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function lenses(Request $request)
@@ -120,7 +125,7 @@ class DailyVisit extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     public function actions(Request $request)

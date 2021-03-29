@@ -31,4 +31,8 @@ class DailyVisit extends Model
     {
         return $this->belongsTo('App\Domain');
     }
+
+    public function getVisitsAdominoComAttribute(){
+        return ($this->total - $this->visits);
+    }
 }
