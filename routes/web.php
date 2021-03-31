@@ -30,3 +30,11 @@ Route::group([
     Route::get('/datenschutz', 'StaticController@dataPrivacy')->name('static.dataprivacy');
     Route::get('/bildnachweise', 'StaticController@imageLicences')->name('static.imagelicences');
 });
+
+Auth::routes();
+Route::get('/admin', function () {
+    return redirect(\route('login'));
+});
+Route::get('/login', 'AuthController@index')->name('login');
+Route::get('/password/reset', 'AuthController@forgotPassword')->name('password.request');
+Route::get('/home', 'HomeController@index')->name('home');

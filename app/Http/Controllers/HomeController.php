@@ -8,7 +8,13 @@ use App\Http\Requests\LandingpageInquiryRequest;
 
 class HomeController extends Controller
 {
-    public function __invoke() {
+    public function __invoke()
+    {
         return view('static.home');
+    }
+
+    public function index()
+    {
+        return view('home');
     }
 }
