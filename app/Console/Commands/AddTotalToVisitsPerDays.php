@@ -44,7 +44,7 @@ class AddTotalToVisitsPerDays extends Command
 
             if (!$columnExist) {
                 Schema::table('visits_per_days', function (Blueprint $table) use ($columnName) {
-                    $table->integer($columnName)->default(0)->index();
+                    $table->integer($columnName)->default(0);
                 });
             }
         }

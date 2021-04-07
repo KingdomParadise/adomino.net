@@ -181,7 +181,7 @@ return [
         App\Providers\NovaServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ViewServiceProvider::class,
-
+        Yajra\DataTables\DataTablesServiceProvider::class,
 
     ],
 

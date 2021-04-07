@@ -4,7 +4,7 @@
     <div class="login-box">
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <a href="{{url('/')}}" class="h1"><b>Adomino.</b>net</a>
+                <img src="{{url('img/logo.png')}}" style="width: 85%;"/>
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
@@ -56,7 +56,7 @@
                         </div>
                     </div>
                     <p class="mt-3">
-                        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
                     </p>
                 </form>
             </div>

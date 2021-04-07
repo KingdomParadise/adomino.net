@@ -36,4 +36,30 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function addUser($user_detail_array)
+    {
+        $user = new User();
+        foreach ($user_detail_array as $user_col => $user_val)
+            $user->$user_col = $user_val;
+        $user->save();
+    }
+
+    public static function updateUser($user_detail_array, $id)
+    {
+        $user = User::find($id);
+        foreach ($user_detail_array as $user_col => $user_val)
+            $user->$user_col = $user_val;
+        $user->save();
+    }
+
+    public static function deleteUser($id)
+    {
+        return User::find($id)->delete();
+    }
+
+    public static function getUser($id)
+    {
+        return User::find($id);
+    }
 }

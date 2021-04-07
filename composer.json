@@ -26,7 +26,9 @@
         "michielkempen/nova-order-field": "^2.0",
         "spatie/laravel-translatable": "^4.5",
         "spatie/nova-translatable": "^3.0",
-        "titasgailius/search-relations": "^1.0"
+        "titasgailius/search-relations": "^1.0",
+        "yajra/laravel-datatables": "^1.5",
+        "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

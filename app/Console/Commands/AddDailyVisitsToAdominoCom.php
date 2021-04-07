@@ -48,14 +48,14 @@ class AddDailyVisitsToAdominoCom extends Command
                     $domain = Domain::find($visit->domain_id);
                     // If domain not found or doesn't have adomino_com_id, skip this visit
                     if (!isset($domain) || !isset($domain->adomino_com_id)) continue;
-
+//
                     $record = DB::connection('adomino_com')
                         ->table('dv_stats_requests')
                         ->where('datum', $visit->day->format('Y-m-d'))
                         ->where('domainid', $domain->adomino_com_id)
                         ->where('stunde', 0)
                         ->first();
-
+//
                     if ($record) {
                         DB::connection('adomino_com')
                             ->table('dv_stats_requests')
