@@ -4,14 +4,17 @@ if ($mysqli->connect_error) {
     echo "Failed to connect to MySQL: " . $mysqli->connect_error;
     exit();
 }
+$mysqli->set_charset("utf8mb4");
 ini_set('memory_limit', '-1');
 set_time_limit(0);
 echo '<pre>';
+
 //$incrementId = 13830;
-//$visitsPerDayDomainRecordsSql = $mysqli->query("SELECT * FROM daily_visits where day BETWEEN '2020-12-01' and '2020-12-31'");
+//$visitsPerDayDomainRecordsSql = $mysqli->query("SELECT * FROM daily_visits where day='2021-04-14'");
+//$visitsPerDayDomainRecordsSql = $mysqli->query("SELECT * FROM domains WHERE domain LIKE '%xn--%'");
 //$all_visits_domains = $visitsPerDayDomainRecordsSql->fetch_all(MYSQLI_ASSOC);
 //print_r($all_visits_domains);
-//die;
+die;
 //foreach ($all_visits_domains as $all_visits_domain) {
 //    $mysqli->query("delete from visits_per_days where id='" . $all_visits_domain['id'] . "'");
 //    $array_keys = array_keys($all_visits_domain);

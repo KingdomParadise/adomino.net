@@ -54,16 +54,20 @@ class DailyVisitController extends Controller
     {
         return DataTables::of(\App\DailyVisit::select('daily_visits.*', 'domains.domain')->join('domains', 'domains.id', '=', 'daily_visits.domain_id'))
             ->editColumn('day', function ($dailyVisit) {
-                return date('Y-m-d', strtotime($dailyVisit->day));
+                return '<p style="text-align: right;margin: 0px">' . date('Y-m-d', strtotime($dailyVisit->day)) . '</p>';
             })
             ->editColumn('domains.domain', function ($dailyVisit) {
+//                return $dailyVisit->domain . "--" . $dailyVisit->domain_id;
                 return $dailyVisit->domain;
             })
             ->editColumn('visits', function ($dailyVisit) {
-                return $dailyVisit->visits;
+                return '<p style="text-align: right;margin: 0px">' . $dailyVisit->visits . '</p>';
             })
             ->addColumn('adomino_com_total', function ($dailyVisit) {
-                return ($dailyVisit->total - $dailyVisit->visits);
+                if (empty($dailyVisit->total))
+                    return '<p style="text-align: right;margin: 0px">0</p>';
+                else
+                    return '<p style="text-align: right;margin: 0px">' . ($dailyVisit->total - $dailyVisit->visits) . '</p>';
             })
             ->editColumn('adomino_com_ok', function ($dailyVisit) {
                 if ($dailyVisit->adomino_com_ok) {
@@ -73,7 +77,7 @@ class DailyVisitController extends Controller
                 }
             })
             ->editColumn('total', function ($dailyVisit) {
-                return $dailyVisit->total;
+                return '<p style="text-align: right;margin: 0px">' . $dailyVisit->total . '</p>';
             })
             ->rawColumns([
                 'day',

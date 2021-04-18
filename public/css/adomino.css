@@ -44,3 +44,22 @@
     word-wrap: break-word;
     font-size: 14px !important;
 }
+
+/*table.table-bordered.dataTable th, table.table-bordered.dataTable td {*/
+    /*padding-bottom: 0px;*/
+/*}*/
+.table td, .table th{
+    padding-left: 5px !important;
+    vertical-align: middle;
+}
+
+
+tbody tr td{
+    padding-bottom: 0px !important;
+    padding-top: 0px !important;
+}
+/*table.table-bordered.dataTable td*/
+table.table-bordered.dataTable th{
+    padding-bottom: 5px !important;
+    padding-top: 5px !important;
+}

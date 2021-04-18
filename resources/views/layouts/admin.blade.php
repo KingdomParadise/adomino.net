@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="base-url" content="{{ url('/') }}">
-    <title>{{ config('app.name', 'Adomino.net') }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Adomino Backend</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/favicon.ico') }}">
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="{{url('themes/fontawesome-free/css/all.min.css')}}">
@@ -49,17 +51,9 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a href="{{url('/')}}" class="brand-link">
             {{--<span class="brand-text h3"><b>Adomino.</b>net</span>--}}
-            <img src="{{url('img/logo.png')}}" style="width: 85%;"/>
+            <img src="{{url('img/white_logo.png')}}" style="width: 60%; margin-left: 50px; margin-right: 15px;"/>
         </a>
         <div class="sidebar">
-            <div class="mt-3 pb-3 mb-3 d-flex">
-                {{--<div class="image">--}}
-                {{--<img src="{{url('img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">--}}
-                {{--</div>--}}
-                {{--<div class="info">--}}
-                {{--<a href="#" class="d-block">{{ Auth::user()->name }}</a>--}}
-                {{--</div>--}}
-            </div>
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                     data-accordion="false">
@@ -273,6 +267,7 @@
 <script src="{{url('themes/moment/moment.min.js')}}"></script>
 <script src="{{url('themes/daterangepicker/daterangepicker.js')}}"></script>
 <script src="{{url('themes/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+<script src="{{url('themes/inputmask/jquery.inputmask.min.js')}}"></script>
 <script src="{{url('js/adomino-theme.min.js')}}"></script>
 <script src="{{url('js/adomino-common.js')}}"></script>
 <script src="{{url('js/adomino.js')}}"></script>

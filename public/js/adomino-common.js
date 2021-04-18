@@ -54,7 +54,39 @@ function appendFilterInquiryDatas() {
             $('select[name="trashed"]').val(filtersObject.trashed);
         }
     }
+}
 
+function appendFilterDomainDatas() {
+    $('select[name="domain_filter_is_deleted"]').val($('input[name="is_deleted"]').val());
+    $('select[name="domain_filter_title"]').val($('input[name="title"]').val());
+    $('select[name="domain_filter_info_en"]').val($('input[name="info_en"]').val());
+    $('select[name="domain_filter_info_de"]').val($('input[name="info_de"]').val());
+}
+
+function getDataTableLanguage() {
+    return {
+        "sEmptyTable": "Keine Daten in der Tabelle vorhanden",
+        "sInfo": "_START_ bis _END_ von _TOTAL_ Einträgen",
+        "sInfoEmpty": "0 bis 0 von 0 Einträgen",
+        "sInfoFiltered": "(gefiltert von _MAX_ Einträgen)",
+        "sInfoPostFix": "",
+        "sInfoThousands": ".",
+        "sLengthMenu": "anzeigen _MENU_ Einträge",
+        "sLoadingRecords": "Wird geladen...",
+        "sProcessing": "Bitte warten...",
+        "sSearch": "Suchen",
+        "sZeroRecords": "Keine Einträge vorhanden.",
+        "oPaginate": {
+            "sFirst": "Erste",
+            "sPrevious": "Zurück",
+            "sNext": "Nächste",
+            "sLast": "Letzte"
+        },
+        "oAria": {
+            "sSortAscending": ": aktivieren, um Spalte aufsteigend zu sortieren",
+            "sSortDescending": ": aktivieren, um Spalte absteigend zu sortieren"
+        }
+    };
 }
 
 function OpenModal(btn, url, formData, modal_name) {
@@ -62,14 +94,10 @@ function OpenModal(btn, url, formData, modal_name) {
     sendAjaxRequest(formData, url, function (data) {
         $('#adominoModalContent').html(data.responseText);
         $('#dateRangePicker').daterangepicker()
-        // if (modal_name == 'get-filter-domain-modal') {
-        //     $('select[name="is_deleted"]').val($('input[name="is_deleted"]').val());
-        //     $('select[name="title"]').val($('input[name="title"]').val());
-        //     $('select[name="info_en"]').val($('input[name="info_en"]').val());
-        //     $('select[name="info_de"]').val($('input[name="info_de"]').val());
-        // } else
         if (modal_name == 'get-filter-inquiry-modal') {
             appendFilterInquiryDatas();
+        } else if (modal_name == 'get-filter-domain-modal') {
+            appendFilterDomainDatas();
         }
         // if ($('select[name="per_page"]').length !== undefined && $('.data_table_yajra').length !== undefined) {
         //     $('select[name="per_page"]').val($('.data_table_yajra').attr('data-length'));

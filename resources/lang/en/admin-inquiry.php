@@ -19,7 +19,7 @@ return [
     'websiteLanguageInputField' => 'Webseiten-Sprache',
     'browserLanguageInputField' => 'Browser-Sprache',
     'emailInputField' => 'E-Mail',
-    'ipInputField' => 'IP',
+    'ipInputField' => 'IP-Adresse',
     'createNewInquiryButton' => 'neue Anfrage erstellen',
     'updateInquiryButton' => 'Anfrage aktualisieren',
     'anonymousConfirmationMessage' => 'Möchten Sie diese Anfrage wirklich anonymisieren?',

@@ -17,7 +17,8 @@ use Illuminate\Contracts\Encryption\DecryptException;
 
 class LandingpageController extends Controller
 {
-    public function domain(Request $request, $hash) {
+    public function domain(Request $request, $hash)
+    {
         // Decrypt the hash
         try {
             $domainName = Crypt::decryptString($hash);
@@ -25,10 +26,9 @@ class LandingpageController extends Controller
             abort(404);
         }
 
-        if( empty($hash) ) throw \Exception(__('hashed_domain_invalid'));
+        if (empty($hash)) throw \Exception(__('hashed_domain_invalid'));
 
         $domain = Domain::where('domain', $domainName)->first();
-
         if (!$domain) {
             if ($domainName != config('app.ip')) {
                 NotFoundDomain::create(['domain' => $domainName]);
@@ -45,7 +45,8 @@ class LandingpageController extends Controller
         return view('landingpage.domain', compact('domain'));
     }
 
-    public function send(LandingpageInquiryRequest $request) {
+    public function send(LandingpageInquiryRequest $request)
+    {
 
         // Validate ReCaptcha V2
         $recaptchaResponse = (new \ReCaptcha\ReCaptcha(config('recaptcha.api_secret_key')))
@@ -105,7 +106,7 @@ class LandingpageController extends Controller
                     'domainid' => $domain->adomino_com_id,
                     'name' => $latin1_prename . ' ' . $latin1_surname,
                     'mail' => $request->email,
-                    'ip' =>  $request->ip(),
+                    'ip' => $request->ip(),
                     'anrede' => $request->gender == 'f' ? 'sgf' : 'sgh',
                     'vorname' => $latin1_prename,
                     'nachname' => $latin1_surname,
@@ -121,7 +122,7 @@ class LandingpageController extends Controller
                     'angebotid' => $dvDomainsAngeboteId,
                     'aktionzeit' => $dateTimeWithTimezone,
                     'wer' => 0,
-                    'aktionpreis' =>  0,
+                    'aktionpreis' => 0,
                     'aktion' => ' ',
                     'umkopiert' => 0,
                 ]);

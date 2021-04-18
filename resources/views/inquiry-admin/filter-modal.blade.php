@@ -13,10 +13,10 @@
                     <option value="-1">Alle</option>
                 </select>
             </div>
-            <div class="form-group row">
-                <label>Anzahl der Tage</label>
-                <input type="number" class="form-control" name="no_of_days">
-            </div>
+            {{--<div class="form-group row">--}}
+                {{--<label>Anzahl der Tage</label>--}}
+                {{--<input type="number" class="form-control" name="no_of_days">--}}
+            {{--</div>--}}
             <div class="form-group row">
                 <label>Gelöschte einbeziehen?</label>
                 <select class="form-control" name="trashed">
@@ -28,11 +28,11 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default btn-sm"
-                    data-dismiss="modal">Nein
+                    data-dismiss="modal">Abbrechen
             </button>
             <button type="button" class="btn btn-primary btn-sm"
                     id="filterSubmitButton">
-                Filter
+                Speichern
             </button>
         </div>
     </form>

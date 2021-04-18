@@ -34,6 +34,13 @@ class ImportDomains extends Command
 
         ssh_tunnel_call();
 
+//        $res = DB::connection('adomino_com')
+//            ->table('dv_domains')
+//            ->where('id', 969)->get();
+//        print_r($res);
+//
+//        die;
+
         $existingDomainIds = Domain::whereNotNull('adomino_com_id')
             ->pluck('adomino_com_id')
             ->toArray();

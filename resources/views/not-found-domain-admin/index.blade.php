@@ -21,13 +21,16 @@
                             </div>
                         @endif
                         <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group has-search">
+                            <div class="col-md-4">
+                                <div class="form-group has-search input-group">
                                     <span class="fa fa-search form-control-feedback"></span>
                                     <input type="text" class="form-control" id="yajraSearch" placeholder="Suche">
+                                    <span class="input-group-append">
+                                        <button type="button" class="btn btn-primary yajraBtnSearch">Suchen</button>
+                                    </span>
                                 </div>
                             </div>
-                            <div class="col-md-9">
+                            <div class="col-md-8">
                                 <button data-href="{{route('get-filter-nfdomain-modal')}}"
                                         data-id="" class="btn btn-default float-right OpenModal"><i
                                             class="fa fa-filter"></i>
@@ -40,6 +43,8 @@
                             </div>
                         </div>
                         <table class="table table-striped table-bordered data_table_yajra"
+                               data-table-show="1"
+                               data-table-name="not-found-domain-table"
                                data-url="{{route('get-all-nfdomains-json')}}"
                                data-length="{{$page_length}}"
                                style="width:100%">

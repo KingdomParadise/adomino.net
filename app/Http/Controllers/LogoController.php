@@ -171,7 +171,7 @@ class LogoController extends Controller
                 return '<input type="checkbox" data-row-id="' . $logo->id . '" class="selectCheckBox"/>';
             })
             ->editColumn('id', function ($logo) {
-                return $logo->id;
+                return '<p style="text-align: right;margin: 0px">' . $logo->id . '</p>';
             })
             ->addColumn('active', function ($logo) {
                 if ($logo->active) {
@@ -207,6 +207,7 @@ class LogoController extends Controller
 
             })
             ->rawColumns([
+                'id',
                 'checkbox',
                 'active',
                 'logo',

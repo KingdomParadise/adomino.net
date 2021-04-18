@@ -9,7 +9,8 @@ use Spatie\Translatable\HasTranslations;
 
 class Domain extends Model
 {
-    use SoftDeletes, HasTranslations, SetGetDomain;
+//    use SoftDeletes, HasTranslations, SetGetDomain;
+    use SoftDeletes, HasTranslations;
 
     public $translatable = ['info'];
 

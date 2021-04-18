@@ -19,13 +19,16 @@
                             </div>
                         @endif
                         <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group has-search">
+                            <div class="col-md-4">
+                                <div class="form-group has-search input-group">
                                     <span class="fa fa-search form-control-feedback"></span>
                                     <input type="text" class="form-control" id="yajraSearch" placeholder="Suche">
+                                    <span class="input-group-append">
+                                        <button type="button" class="btn btn-primary yajraBtnSearch">Suchen</button>
+                                    </span>
                                 </div>
                             </div>
-                            <div class="col-md-9">
+                            <div class="col-md-8">
                                 <button data-href="{{route('get-filter-visits-modal')}}"
                                         data-id=""
                                         data-name="get-filter-visits-modal"
@@ -35,6 +38,8 @@
                             </div>
                         </div>
                         <table class="table table-striped table-bordered data_table_yajra"
+                               data-table-show="1"
+                               data-table-name="visits-table"
                                data-url="{{route('get-all-visits-json')}}"
                                data-length="{{$page_length}}"
                                data-custom-order="0"

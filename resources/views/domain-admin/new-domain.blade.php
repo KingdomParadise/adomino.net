@@ -36,6 +36,7 @@
                                     <code>*</code></label>
                                 <div class="col-sm-6">
                                     <input required class="form-control @error('domain') is-invalid @enderror"
+                                           data-value="{{$domain->domain}}"
                                            name="domain"
                                            @if(old('domain'))
                                            value="{{old('domain')}}"

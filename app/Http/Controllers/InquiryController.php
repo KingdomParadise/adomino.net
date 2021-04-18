@@ -133,27 +133,27 @@ class InquiryController extends Controller
             'checkbox' => array(
                 'name' => '<input type="checkbox" id="selectAllCheckbox"/>',
                 'sort' => false,
-                'width' => '20px',
+                'width' => '2px',
             ),
             'actions' => array(
                 'name' => '',
                 'sort' => false,
-                'width' => '40px',
+                'width' => '18px',
             ),
             'created_at' => array(
                 'name' => 'Uhrzeit',
                 'sort' => true,
-                'width' => '80px',
+                'width' => '40px',
             ),
             'domains.domain' => array(
                 'name' => 'Domain',
                 'sort' => false,
-                'width' => '150px',
+                'width' => '100px',
             ),
             'gender' => array(
                 'name' => 'Anrede',
                 'sort' => false,
-                'width' => '50px',
+                'width' => '20px',
             ),
             'prename' => array(
                 'name' => 'Vorname',
@@ -166,14 +166,14 @@ class InquiryController extends Controller
                 'width' => '80px',
             ),
             'email' => array(
-                'name' => 'Email',
+                'name' => 'E-Mail',
                 'sort' => false,
                 'width' => '150px',
             ),
             'anonymous' => array(
                 'name' => 'Anonymisieren',
                 'sort' => false,
-                'width' => '80px',
+                'width' => '35px',
             ),
         );
         return view('inquiry-admin.index')->with($this->return_array);
@@ -203,7 +203,7 @@ class InquiryController extends Controller
                 return '<input type="checkbox" data-row-id="' . $inquiry->id . '" class="selectCheckBox"/>';
             })
             ->editColumn('created_at', function ($inquiry) {
-                return $inquiry->created_at;
+                return '<p style="text-align: right;margin: 0px">'.date('Y-m-d H:i', strtotime($inquiry->created_at)).'</p>';
             })
             ->editColumn('domains.domain', function ($inquiry) {
                 return '<a href="http://' . $inquiry->domain->domain . '" target="_blank">' . $inquiry->domain->domain . '</a>';
@@ -227,7 +227,8 @@ class InquiryController extends Controller
             ->addColumn('anonymous', function ($inquiry) {
                 return '<label data-href="' . route('get-anonymous-inquiry-modal') . '"
                 data-id="' . $inquiry->id . '"
-                data-name="get-anonymous-inquiry-modal" class="OpenModal btn btn-primary btn-xs">' . __('admin-inquiry.anonymousButton') . '</label>';
+                style="margin-bottom: 2px;margin-top: 2px;padding:0px 4px 0px 4px"
+                data-name="get-anonymous-inquiry-modal" class="OpenModal btn btn-primary btn-xs">' . ucfirst(__('admin-inquiry.anonymousButton')) . '</label>';
             })
             ->addColumn('actions', function ($inquiry) {
                 return '

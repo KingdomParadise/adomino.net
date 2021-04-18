@@ -56,12 +56,14 @@
                                data-table-filter=""
                                data-custom-order="2"
                                data-custom-sort-type="desc"
+                               cellpadding="0"
+                               cellspacing="0"
                                data-length="{{$page_length}}"
                                style="display:none;width:100%">
                             <thead>
                             <tr>
                                 @foreach($columns as $column_key=>$column_val)
-                                    <th data-column="{{$column_key}}"
+                                    <th class="no-sort" data-column="{{$column_key}}"
                                         @if(isset($column_val['width']))
                                         data-width="{{$column_val['width']}}"
                                         @endif

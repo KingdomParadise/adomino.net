@@ -40,15 +40,15 @@ class VisitsController extends Controller
 
     public function getAllVisitsJson()
     {
-        return DataTables::of(\App\Visit::select('domains.domain','visits.*')->join('domains', 'domains.id', '=', 'visits.domain_id'))
+        return DataTables::of(\App\Visit::select('domains.domain', 'visits.*')->join('domains', 'domains.id', '=', 'visits.domain_id'))
             ->editColumn('created_at', function ($visits) {
-                return $visits->created_at;
+                return '<p style="text-align: right;margin: 0px">' . $visits->created_at . '</p>';
             })
             ->editColumn('domains.domain', function ($visits) {
                 return $visits->domain;
             })
             ->editColumn('ip', function ($visits) {
-                return $visits->ip;
+                return '<p style="text-align: right;margin: 0px">' . $visits->ip . '</p>';
             })
             ->rawColumns([
                 'created_at',

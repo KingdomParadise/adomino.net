@@ -79,10 +79,10 @@ class NotFoundController extends Controller
                 return '<input type="checkbox" data-row-id="' . $domain->id . '" class="selectCheckBox"/>';
             })
             ->editColumn('id', function ($domain) {
-                return $domain->id;
+                return '<p style="text-align: right;margin: 0px">' . $domain->id . '</p>';
             })
             ->editColumn('created_at', function ($domain) {
-                return $domain->created_at;
+                return '<p style="text-align: right;margin: 0px">' . $domain->created_at . '</p>';
             })
             ->editColumn('domain', function ($domain) {
                 return $domain->domain;

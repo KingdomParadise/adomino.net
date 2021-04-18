@@ -125,6 +125,62 @@ class DomainController extends Controller
 //                'sort' => false,
 //            ),
 //        );
+        if (isset($_REQUEST['is_filtered']) && !empty($_REQUEST['is_filtered']) && $_REQUEST['is_filtered'] == 'true') {
+            $filter = $_REQUEST;
+            $query = \App\Domain::query();
+            if (isset($filter['is_deleted']) && $filter['is_deleted'] == 'yes') {
+                $query->withTrashed();
+            } elseif (isset($filter['is_deleted']) && $filter['is_deleted'] == 'only') {
+                $query->onlyTrashed();
+            }
+            if (isset($filter['title']) && $filter['title'] == 'yes') {
+                $query->where(function ($query) {
+                    $query->whereNotNull('title')
+                        ->where('title', '!=', '');
+                });
+            } elseif (isset($filter['title']) && $filter['title'] == 'no') {
+                $query->where(function ($query) {
+                    $query->whereNull('title')
+                        ->orWhere('title', '');
+                });
+            }
+            if (isset($filter['info_en']) && $filter['info_en'] == 'yes') {
+                $query->where(function ($query) {
+                    $query->whereNotNull('info->en')
+                        ->where('info->en', '!=', '');
+                });
+            } elseif (isset($filter['info_en']) && $filter['info_en'] == 'no') {
+                $query->where(function ($query) {
+                    $query->whereNull('info->en')
+                        ->orWhere('info->en', '');
+                });
+            }
+            if (isset($filter['info_de']) && $filter['info_de'] == 'yes') {
+                $query->where(function ($query) {
+                    $query->whereNotNull('info->de')
+                        ->where('info->de', '!=', '');
+                });
+            } elseif (isset($filter['info_de']) && $filter['info_de'] == 'no') {
+                $query->where(function ($query) {
+                    $query->whereNull('info->de')
+                        ->orWhere('info->de', '');
+                });
+            }
+//            echo idn_to_utf8($this->return_array['domain']->domain_name, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+//            echo idn_to_ascii($this->return_array['domain']->domain_name, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+//            die;
+            if (isset($_REQUEST['search_params']) && !empty($_REQUEST['search_params'])) {
+                $searchParams = trim($_REQUEST['search_params']);
+                $query->where(function ($query) use ($searchParams) {
+                    $query->where('info->de', 'like', '%' . $searchParams . '%')
+                        ->orwhere('info->en', 'like', '%' . $searchParams . '%')
+                        ->orwhere('domain', 'like', '%' . $searchParams . '%')
+                        ->orwhere('title', 'like', '%' . $searchParams . '%')
+                        ->orwhere('landingpage_mode', 'like', '%' . $searchParams . '%');
+                });
+            }
+            $this->return_array['domains'] = $query->orderBy('domain', 'asc')->get();
+        }
         return view('domain-admin.index')->with($this->return_array);
     }
 
@@ -146,6 +202,8 @@ class DomainController extends Controller
         if (isset($_REQUEST['filter'])) {
             $filter = json_decode($_REQUEST['filter'], true);
             if (isset($filter['is_deleted']) && $filter['is_deleted'] == 'yes') {
+                $query->withTrashed();
+            } elseif (isset($filter['is_deleted']) && $filter['is_deleted'] == 'only') {
                 $query->onlyTrashed();
             }
             if (isset($filter['title']) && $filter['title'] == 'yes') {
@@ -182,6 +240,7 @@ class DomainController extends Controller
                 });
             }
         }
+
         return DataTables::of($query)
             ->addColumn('checkbox', function ($domain) {
                 return '<input type="checkbox" data-row-id="' . $domain->id . '" class="selectCheckBox"/>';

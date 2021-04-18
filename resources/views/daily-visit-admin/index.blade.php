@@ -19,13 +19,20 @@
                             </div>
                         @endif
                         <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group has-search">
+                            <div class="col-md-4">
+                                <div class="form-group has-search input-group">
                                     <span class="fa fa-search form-control-feedback"></span>
-                                    <input type="text" class="form-control" id="yajraSearch" placeholder="Suche">
+                                    <input type="text" class="form-control"
+                                           @if(isset($_REQUEST['search']) && !empty(trim($_REQUEST['search'])))
+                                           value="{{trim($_REQUEST['search'])}}"
+                                           @endif id="yajraSearch"
+                                           placeholder="Suche">
+                                    <span class="input-group-append">
+                                        <button type="button" class="btn btn-primary yajraBtnSearch">Suchen</button>
+                                    </span>
                                 </div>
                             </div>
-                            <div class="col-md-9">
+                            <div class="col-md-8">
                                 <button data-href="{{route('get-filter-daily-visit-modal')}}"
                                         data-id=""
                                         data-name="get-filter-daily-visits-modal"
@@ -36,8 +43,10 @@
                         </div>
                         <table class="table table-striped table-bordered data_table_yajra"
                                data-url="{{route('get-all-daily-visit-json')}}"
+                               data-table-show="1"
                                data-length="{{$page_length}}"
                                data-custom-order="0"
+                               data-table-name="daily-visits-table"
                                style="width:100%">
                             <thead>
                             <tr>

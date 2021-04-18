@@ -60,7 +60,8 @@ $(function () {
 
     function getInquirySearchFilers() {
         if ($('.data_table_yajra').attr('data-table-name') !== undefined && $('.data_table_yajra').attr('data-table-name') == 'inquiry-table') {
-            $('.data_table_yajra').attr('data-table-filter', '{"no_of_days":"' + $('input[name="no_of_days"]').val() + '","trashed":"' + $('select[name="trashed"]').val() + '"}');
+            // $('.data_table_yajra').attr('data-table-filter', '{"no_of_days":"' + $('input[name="no_of_days"]').val() + '","trashed":"' + $('select[name="trashed"]').val() + '"}');
+            $('.data_table_yajra').attr('data-table-filter', '{"trashed":"' + $('select[name="trashed"]').val() + '"}');
         }
     }
 
@@ -76,29 +77,7 @@ $(function () {
             language: {
                 processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>wird bearbeitet...'
             },
-            "oLanguage": {
-                "sEmptyTable": "Keine Daten in der Tabelle vorhanden",
-                "sInfo": "_START_ bis _END_ von _TOTAL_ Einträgen",
-                "sInfoEmpty": "0 bis 0 von 0 Einträgen",
-                "sInfoFiltered": "(gefiltert von _MAX_ Einträgen)",
-                "sInfoPostFix": "",
-                "sInfoThousands": ".",
-                "sLengthMenu": "anzeigen _MENU_ Einträge",
-                "sLoadingRecords": "Wird geladen...",
-                "sProcessing": "Bitte warten...",
-                "sSearch": "Suchen",
-                "sZeroRecords": "Keine Einträge vorhanden.",
-                "oPaginate": {
-                    "sFirst": "Erste",
-                    "sPrevious": "Zurück",
-                    "sNext": "Nächste",
-                    "sLast": "Letzte"
-                },
-                "oAria": {
-                    "sSortAscending": ": aktivieren, um Spalte aufsteigend zu sortieren",
-                    "sSortDescending": ": aktivieren, um Spalte absteigend zu sortieren"
-                }
-            },
+            oLanguage: getDataTableLanguage(),
             serverSide: true,
             destroy: true,
             ajax: function (data, callback) {
@@ -108,14 +87,15 @@ $(function () {
                 //     $('input[name="info_en"]').val(urlParams.get('info_en'));
                 //     $('input[name="info_de"]').val(urlParams.get('info_de'));
                 //     data.filter = '{"info_de": "' + urlParams.get('info_de') + '","info_en": "' + urlParams.get('info_en') + '","title": "' + urlParams.get('title') + '","is_deleted": "' + urlParams.get('is_deleted') + '"}';
-                // } else if ($('.data_table_yajra').attr('data-table-name') !== undefined && $('.data_table_yajra').attr('data-table-name') == 'statistics-table') {
+                // } else
+                // if ($('.data_table_yajra').attr('data-table-name') !== undefined && $('.data_table_yajra').attr('data-table-name') == 'statistics-table') {
                 //     $('input[name="is_deleted"]').val(urlParams.get('is_deleted'));
                 //     $('input[name="title"]').val(urlParams.get('title'));
                 //     $('input[name="info_en"]').val(urlParams.get('info_en'));
                 //     $('input[name="info_de"]').val(urlParams.get('info_de'));
                 //     data.filter = '{"from_date": "' + urlParams.get('from_date') + '","to_date": "' + urlParams.get('to_date') + '"}';
                 // }
-                data.filter = $('.data_table_yajra').attr('data-table-filter');
+                data.filter = $('.data_table_yajra').attr('data-filter');
                 data.search = {regex: false, value: $('#yajraSearch').val()};
                 $.ajax({
                     url: $('.data_table_yajra').attr('data-url'),
@@ -141,10 +121,12 @@ $(function () {
             // ],
             // pageLength: (urlParams.get('per_page') !== undefined) ? parseInt(urlParams.get('per_page')) : parseInt($('.data_table_yajra').attr('data-length')),
             pageLength: parseInt($('.data_table_yajra').attr('data-length')),
+            autoWidth: false
             // responsive: true
         });
-
     }
+
+    $('#datemask').inputmask('yyyy-mm-dd HH:mm', {'placeholder': 'yyyy-mm-dd HH:mm'})
 
     $(document).on('click', '.OpenModal', function () {
         var url = $(this).attr('data-href');
@@ -190,42 +172,91 @@ $(function () {
 
     });
 
+
+    $(document).on('change', 'select[name="domain_filter_info_de"]', function () {
+        $('input[name="info_de"]').val($(this).val());
+    })
+    $(document).on('change', 'select[name="domain_filter_info_en"]', function () {
+        $('input[name="info_en"]').val($(this).val());
+    })
+    $(document).on('change', 'select[name="domain_filter_title"]', function () {
+        $('input[name="title"]').val($(this).val());
+    })
+    $(document).on('change', 'select[name="domain_filter_is_deleted"]', function () {
+        $('input[name="is_deleted"]').val($(this).val());
+    })
+
+
     $(document).on('click', '#filterDomainButton', function () {
+        domainFilterSearch();
+    })
+
+    function domainFilterSearch() {
         var url = window.location.origin + window.location.pathname;
         var is_deleted = "";
         var title = "";
         var info_de = "";
         var info_en = "";
         var per_page = "";
+        var search_params = "";
         var filterParams = new Object();
-        if ($('select[name="is_deleted"]').val().length > 0) {
-            filterParams.is_deleted = $('select[name="is_deleted"]').val();
+        if ($('input[name="is_deleted"]').val().length > 0) {
+            filterParams.is_deleted = $('input[name="is_deleted"]').val();
+        } else {
+            filterParams.is_deleted = "";
         }
-        if ($('select[name="title"]').val().length > 0) {
-            filterParams.title = $('select[name="title"]').val();
+        if ($('input[name="title"]').val().length > 0) {
+            filterParams.title = $('input[name="title"]').val();
+        } else {
+            filterParams.title = "";
         }
-        if ($('select[name="info_de"]').val().length > 0) {
-            filterParams.info_de = $('select[name="info_de"]').val();
+        if ($('input[name="info_de"]').val().length > 0) {
+            filterParams.info_de = $('input[name="info_de"]').val();
+        } else {
+            filterParams.info_de = "";
         }
-        if ($('select[name="info_en"]').val().length > 0) {
-            filterParams.info_en = $('select[name="info_en"]').val();
+        if ($('input[name="info_en"]').val().length > 0) {
+            filterParams.info_en = $('input[name="info_en"]').val();
+        } else {
+            filterParams.info_en = "";
         }
-        if ($('select[name="per_page"]').val().length > 0) {
-            filterParams.per_page = $('select[name="per_page"]').val();
+        if ($('#yajraSearch').val().length > 0) {
+            filterParams.search_params = $('#yajraSearch').val();
+        } else {
+            filterParams.search_params = "";
         }
         if (!jQuery.isEmptyObject(filterParams)) {
+            filterParams.is_filtered = true;
             window.location.replace(url + "?" + $.param(filterParams));
         } else {
             window.location.reload();
         }
-    })
+    }
+
+    if ($('#yajraSearch').length !== undefined) {
+        var value = $('#yajraSearch').val();
+        if (value.length > 0 && $('.data_table_yajra').length > 0) {
+            $(document).ready(function () {
+                yajraBtnSearch()
+            })
+        }
+    }
 
     $(document).on('click', '#filterStatisticsButton', function () {
-        var startDate = $('#dateRangePicker').data('daterangepicker').startDate.format("YYYY-MM-DD");
-        var endDate = $('#dateRangePicker').data('daterangepicker').endDate.format("YYYY-MM-DD");
-        var per_page = $('select[name="per_page"]').val();
+        var no_of_days = $('input[name="no_of_days"]').val();
+        if (no_of_days < 0) {
+            no_of_days = 1;
+        }
+        var searchVal = $('#yajraSearch').val();
+        // $('.data_table_yajra').attr('data-table-filter', '{"no_of_days":' + no_of_days + '}')
+        // yajraManual();
+        // $('#adominoModal').modal('toggle');
+        // var startDate = $('#dateRangePicker').data('daterangepicker').startDate.format("YYYY-MM-DD");
+        // var endDate = $('#dateRangePicker').data('daterangepicker').endDate.format("YYYY-MM-DD");
+        // var per_page = $('select[name="per_page"]').val();
         var url = window.location.origin + window.location.pathname;
-        window.location.replace(url + "?from_date=" + startDate + "&to_date=" + endDate + "&per_page=" + per_page);
+        // window.location.replace(url + "?from_date=" + startDate + "&to_date=" + endDate + "&per_page=" + per_page);
+        window.location.replace(url + "?no_of_days=" + no_of_days + "&search=" + searchVal);
     })
 
     $(document).on('click', '#filterSubmitButton', function () {
@@ -236,37 +267,22 @@ $(function () {
         $('#adominoModal').modal('toggle');
         //     yajraTable.page.len(perPage).draw();
     })
-
+    var manualTable;
     if ($('.data_table_yajra_manual').length > 0) {
-        $('.data_table_yajra_manual').DataTable({
+        manualTable = $('.data_table_yajra_manual').DataTable({
             bLengthChange: false,
             searching: false,
-            "oLanguage": {
-                "sEmptyTable": "Keine Daten in der Tabelle vorhanden",
-                "sInfo": "_START_ bis _END_ von _TOTAL_ Einträgen",
-                "sInfoEmpty": "0 bis 0 von 0 Einträgen",
-                "sInfoFiltered": "(gefiltert von _MAX_ Einträgen)",
-                "sInfoPostFix": "",
-                "sInfoThousands": ".",
-                "sLengthMenu": "anzeigen _MENU_ Einträge",
-                "sLoadingRecords": "Wird geladen...",
-                "sProcessing": "Bitte warten...",
-                "sSearch": "Suchen",
-                "sZeroRecords": "Keine Einträge vorhanden.",
-                "oPaginate": {
-                    "sFirst": "Erste",
-                    "sPrevious": "Zurück",
-                    "sNext": "Nächste",
-                    "sLast": "Letzte"
-                },
-                "oAria": {
-                    "sSortAscending": ": aktivieren, um Spalte aufsteigend zu sortieren",
-                    "sSortDescending": ": aktivieren, um Spalte absteigend zu sortieren"
-                }
-            },
+            oLanguage: getDataTableLanguage(),
             pageLength: -1,
             paging: false,
+            destroy: true
         });
+    }
+
+    if ($('.data_table_yajra').length > 0) {
+        if ($('.data_table_yajra').attr('data-table-show') !== undefined && $('.data_table_yajra').attr('data-table-show') == '1') {
+            yajraManual();
+        }
     }
 
     $(document).on('click', '.sort', function () {
@@ -304,12 +320,22 @@ $(function () {
     // })
 
     $('.yajraBtnSearch').on('click', function () {
-        var inputVal = $('#yajraSearch').val();
-        // if (inputVal.length > 0) {
-        yajraManual();
-        // yajraTable.ajax.reload();
-        // }
+        yajraBtnSearch();
     })
+
+    function yajraBtnSearch() {
+        var inputVal = $('#yajraSearch').val();
+        if ($('.data_table_yajra').length > 0 && $('.data_table_yajra').attr('data-table-name') !== undefined) {
+            yajraManual();
+        } else {
+            domainFilterSearch()
+        }
+    }
+
+    $('#yajraSearch,input[name="no_of_days"]').keypress(function (e) {
+        if (e.which == 13)
+            $('#filterStatisticsButton').click();
+    });
 
     $('#deleteLogoButton').click(function () {
         $('#preview_logo').remove();

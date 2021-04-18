@@ -15,11 +15,11 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default btn-sm"
-                    data-dismiss="modal">Nein
+                    data-dismiss="modal">Abbrechen
             </button>
             <button type="button" class="btn btn-primary btn-sm"
                     id="filterSubmitButton">
-                Filter
+                Speichern
             </button>
         </div>
     </form>
