@@ -14,11 +14,12 @@ class LogoController extends Controller
     public function __construct()
     {
         $this->return_array['sidebar'] = 'Logos';
+        $this->session_name = "logo_table";
     }
 
     public function getFilterLogoModal()
     {
-        $return_array['ModalTitle'] = 'Filter Logo';
+        $return_array['ModalTitle'] = 'Logo Filter';
         return (string)view('logo-admin.filter-modal')->with($return_array);
     }
 
@@ -129,14 +130,15 @@ class LogoController extends Controller
 
     public function index()
     {
+        \App\User::clearSession($this->session_name);
         $this->return_array['page_length'] = -1;
         $this->return_array['columns'] = array(
-            'checkbox' => array(
-                'name' => '<input type="checkbox" id="selectAllCheckbox"/>',
+            'consecutive' => array(
+                'name' => '#',//<input type="checkbox" id="selectAllCheckbox"/>
                 'sort' => false,
             ),
             'id' => array(
-                'name' => 'ID',
+                'name' => 'Logo-ID',
                 'sort' => true,
             ),
             'active' => array(
@@ -149,14 +151,14 @@ class LogoController extends Controller
             ),
             'purchased_domain' => array(
                 'name' => 'Verkaufte Domain',
-                'sort' => false,
+                'sort' => true,
             ),
             'sort' => array(
                 'name' => 'Sortierung',
                 'sort' => true,
             ),
             'actions' => array(
-                'name' => 'Actions',
+                'name' => 'Aktion',
                 'sort' => false,
             ),
         );
@@ -167,21 +169,21 @@ class LogoController extends Controller
     {
         $lastSorting = \App\Logo::getLastSortNumber();
         return DataTables::of(\App\Logo::query())
-            ->addColumn('checkbox', function ($logo) {
-                return '<input type="checkbox" data-row-id="' . $logo->id . '" class="selectCheckBox"/>';
+            ->addColumn('consecutive', function ($logo) {
+                return '<p style="text-align: right;margin: 0px">' . $logo->id . '</p>';/*'<input type="checkbox" data-row-id="' . $logo->id . '" class="selectCheckBox"/>';*/
             })
             ->editColumn('id', function ($logo) {
                 return '<p style="text-align: right;margin: 0px">' . $logo->id . '</p>';
             })
             ->addColumn('active', function ($logo) {
                 if ($logo->active) {
-                    return '<i class="fa fa-check-circle" style="font-size: 20px;color: #0cbb0cb3;"></i>';
+                    return '<p style="text-align:center; line-height:0px; margin-bottom:0px;"><i class="fa fa-check-circle" style="font-size: 20px;color: #0cbb0cb3;"></i></p>';
                 } else {
-                    return '<i class="fa fa-times-circle" style="font-size: 20px;color: #ff0000b5;"></i>';
+                    return '<p style="text-align:center; line-height:0px; margin-bottom:0px;"><i class="fa fa-times-circle" style="font-size: 20px;color: #ff0000b5;"></i></p>';
                 }
             })
             ->addColumn('logo', function ($logo) {
-                return '<img src="' . Storage::url($logo->logo) . '" style="object-fit: cover;width: 3rem;"/>';
+                return '<div style="text-align:center; padding-left:7px;"><img src="' . Storage::url($logo->logo) . '" style="object-fit: cover;width: 5rem;"/></div>';
             })
             ->editColumn('purchased_domain', function ($logo) {
                 return $logo->purchased_domain;
@@ -208,7 +210,7 @@ class LogoController extends Controller
             })
             ->rawColumns([
                 'id',
-                'checkbox',
+                'consecutive',
                 'active',
                 'logo',
                 'sort',

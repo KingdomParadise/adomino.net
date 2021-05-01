@@ -27,8 +27,9 @@
                 <h2 class="font-weight-light">{{ __('messages.lp_headline_bottom') }}</h2>
 
                 <p class="lp-first-p">{!! __('messages.lp_instruction_1') !!}</p>
-                @if ($domain->info)
-                    <p class="lp-first-p">{{$domain->info}}</p>
+                @php($info_json=json_decode($domain->info,true))
+                @if (isset($info_json[Config::get('app.locale')]))
+                    <p class="lp-first-p">{{$info_json[Config::get('app.locale')]}}</p>
                 @endif
                 <p class="lp-first-p">{!! __('messages.lp_instruction_2') !!}</p>
             </div>

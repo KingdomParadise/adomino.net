@@ -21,7 +21,7 @@ class LandingpageController extends Controller
     {
         // Decrypt the hash
         try {
-            $domainName = Crypt::decryptString($hash);
+            $domainName = idn_to_utf8(Crypt::decryptString($hash), IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
         } catch (DecryptException $e) {
             abort(404);
         }

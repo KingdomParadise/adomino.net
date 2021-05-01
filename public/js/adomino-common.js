@@ -47,7 +47,7 @@ function sendAjaxRequest(formData, url, handleData, btn, type="POST") {
 function appendFilterInquiryDatas() {
     if ($('.data_table_yajra').length !== undefined) {
         $('select[name="per_page"]').val($('.data_table_yajra').attr('data-length'));
-        var filters = $('.data_table_yajra').attr('data-table-filter');
+        var filters = $('.data_table_yajra').attr('data-filter');
         if (filters.length > 0) {
             filtersObject = JSON.parse(filters);
             $('input[name="no_of_days"]').val(filtersObject.no_of_days);
@@ -64,9 +64,8 @@ function appendFilterDomainDatas() {
 }
 
 function getDataTableLanguage() {
-    return {
+    var language = {
         "sEmptyTable": "Keine Daten in der Tabelle vorhanden",
-        "sInfo": "_START_ bis _END_ von _TOTAL_ Einträgen",
         "sInfoEmpty": "0 bis 0 von 0 Einträgen",
         "sInfoFiltered": "(gefiltert von _MAX_ Einträgen)",
         "sInfoPostFix": "",
@@ -87,6 +86,16 @@ function getDataTableLanguage() {
             "sSortDescending": ": aktivieren, um Spalte absteigend zu sortieren"
         }
     };
+    if ($('.data_table_yajra_manual').attr('data-total-count') !== undefined || $('.data_table_yajra').attr('data-total-count') !== undefined) {
+        if ($('.data_table_yajra_manual').attr('data-total-count') !== undefined)
+            language.sInfo = 'Ausgewählt: _TOTAL_ von ' + $('.data_table_yajra_manual').attr('data-total-count') + ' Domains';
+        else if ($('.data_table_yajra').attr('data-total-count') !== undefined)
+            language.sInfo = 'Ausgewählt: _TOTAL_ von ' + $('.data_table_yajra').attr('data-total-count') + ' Domains';
+    } else {
+        language.sInfo = "_START_ bis _END_ von _TOTAL_ Einträgen";
+    }
+
+    return language;
 }
 
 function OpenModal(btn, url, formData, modal_name) {
@@ -94,6 +103,22 @@ function OpenModal(btn, url, formData, modal_name) {
     sendAjaxRequest(formData, url, function (data) {
         $('#adominoModalContent').html(data.responseText);
         $('#dateRangePicker').daterangepicker()
+        $('.singleDatePicker').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 1901,
+            maxYear: parseInt(moment().format('YYYY'), 10),
+            autoApply: true,
+            locale: {
+                format: 'DD.MM.YYYY'
+            },
+            minDate: moment().year() - 10,
+            maxDate: moment(),//.subtract(1, "days")
+            maxYear: moment().year() + 10,
+            // autoUpdateInput: false
+        }, function (start, end, label) {
+            // $('.singleDatePicker').val(start.format('YYYY/MM/DD'));
+        });
         if (modal_name == 'get-filter-inquiry-modal') {
             appendFilterInquiryDatas();
         } else if (modal_name == 'get-filter-domain-modal') {

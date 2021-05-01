@@ -15,8 +15,6 @@
                                 {{ __('admin-users.edituserTitle') }} @else
                                 {{ __('admin-users.adduserTitle') }}
                             @endif</h3>
-                        <a href="{{route('home')}}" class="btn btn-primary float-right btn-sm"><i
-                                    class="fa fa-reply"></i>&nbsp;&nbsp;{{ __('admin-users.backButton') }}</a>
                     </div>
                     <form method="post"
                           action="@if(isset($user)){{route('update-user-process')}}@else{{route('add-new-user-process')}}@endif">
@@ -32,14 +30,13 @@
                             @endif
                             <div class="form-group row">
                                 <label for="name" class="col-sm-2 col-form-label">Name <code>*</code></label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <input required class="form-control @error('name') is-invalid @enderror" name="name"
                                            @if(old('name'))
                                            value="{{old('name')}}"
                                            @elseif(isset($user->name))
                                            value="{{$user->name}}"
-                                           @endif
-                                           placeholder="Name">
+                                           @endif>
                                     @error('name')
                                     <span class="invalid-feedback error" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -48,8 +45,8 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="email" class="col-sm-2 col-form-label">Email <code>*</code></label>
-                                <div class="col-sm-6">
+                                <label for="email" class="col-sm-2 col-form-label">E-Mail <code>*</code></label>
+                                <div class="col-sm-4">
                                     <input type="email" required
                                            @if(old('email'))
                                            value="{{old('email')}}"
@@ -57,8 +54,7 @@
                                            value="{{$user->email}}"
                                            @endif
                                            name="email"
-                                           class="form-control @error('email') is-invalid @enderror"
-                                           placeholder="Email">
+                                           class="form-control @error('email') is-invalid @enderror">
                                     @error('email')
                                     <span class="invalid-feedback error" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -68,10 +64,9 @@
                             </div>
                             <div class="form-group row">
                                 <label for="password" class="col-sm-2 col-form-label">Passwort <code>*</code></label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <input type="password" @if(!isset($user)) required @endif name="password"
-                                           class="form-control @error('password') is-invalid @enderror"
-                                           placeholder="Passwort">
+                                           class="form-control @error('password') is-invalid @enderror">
                                     @error('password')
                                     <span class="invalid-feedback error" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -88,7 +83,8 @@
                                     {{ __('admin-users.createUserButton') }}
                                 @endif
                             </button>
-                            <a href="{{route('home')}}" type="submit" class="btn btn-secondary btn-sm float-right filterButton">
+                            <a href="{{url()->previous()}}"
+                               class="btn btn-default btn-sm float-right filterButton" style="border-color: #ddd">
                                 Abbrechen
                             </a>
                         </div>

@@ -20,7 +20,7 @@ return [
     'browserLanguageInputField' => 'Browser-Sprache',
     'emailInputField' => 'E-Mail',
     'ipInputField' => 'IP-Adresse',
-    'createNewInquiryButton' => 'neue Anfrage erstellen',
+    'createNewInquiryButton' => 'Anfrage erstellen',
     'updateInquiryButton' => 'Anfrage aktualisieren',
     'anonymousConfirmationMessage' => 'Möchten Sie diese Anfrage wirklich anonymisieren?',
     'no' => 'Nein',

@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'title' => 'Aufrufe IP'
+    'title' => 'Aufrufe IP-Adresse'
 ];

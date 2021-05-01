@@ -45,21 +45,23 @@
                         {{--</div>--}}
                         {{--</div>--}}
                         <table class="table table-striped table-bordered data_table_yajra_manual"
+                               data-custom-order="1"
+                               data-custom-sort-type="asc"
                                style="width:100%">
                             <thead>
                             <tr>
-                                <th>#</th>
-                                <th>ID</th>
+                                <th class="no-sort" style="text-align: right; padding-right: 12px; width: 30px;">#</th>
+                                <th style="text-align: right; padding-right: 12px; width: 30px;">ID</th>
                                 <th>Name</th>
-                                <th>Email</th>
+                                <th>E-Mail</th>
                                 <th class="no-sort">Aktion</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($users as $user)
                                 <tr>
-                                    <td>{{ $loop->index+1 }}</td>
-                                    <td>{{$user->id}}</td>
+                                    <td><p style="text-align: right;margin: 0px">{{ $loop->index+1 }}</p></td>
+                                    <td><p style="text-align: right;margin: 0px">{{$user->id}}</p></td>
                                     <td>{{$user->name}}</td>
                                     <td>{{$user->email}}</td>
                                     <td>

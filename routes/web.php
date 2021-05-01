@@ -3,6 +3,7 @@ ini_set('memory_limit', '-1');
 
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,7 @@ Route::group([
     'prefix' => LaravelLocalization::setLocale(),
     'middleware' => ['localeSessionRedirect', 'localizationRedirect']
 ], function () {
+
     Route::get('/', 'HomeController')->name('home');
 
     Route::get('/domain/{hash}', 'LandingpageController@domain')->name('landingpage.domain');
@@ -25,14 +27,38 @@ Route::group([
 
     Route::get('/test', function () {
 
+//        ssh_tunnel_call();
+//        echo '<pre>';
+//        $errorDomains = \App\Domain::where('domain', 'like', '%xn--%')->get();
+////        $adomino_connection = DB::connection('adomino_com');
+//        foreach ($errorDomains as $domain) {
+//            $domain->domain = idn_to_utf8($domain->domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+//            $domain->save();
+////            $res = $adomino_connection
+////                ->table('dv_domains')
+////                ->where('id', $domain->adomino_com_id)->get();
+////            print_r($res);
+//        }
+//        die;
     });
     Route::get('/impressum', 'StaticController@imprint')->name('static.imprint');
     Route::get('/datenschutz', 'StaticController@dataPrivacy')->name('static.dataprivacy');
     Route::get('/bildnachweise', 'StaticController@imageLicences')->name('static.imagelicences');
 
     Route::group([
-        'middleware' => ['auth']
+        'middleware' => ['auth', '2fa']
     ], function () {
+
+        Route::get('/admin/2fa', 'LoginSecurityController@show2faForm')->name('2fa-settings');
+        Route::post('/admin/2fa/generateSecret', 'LoginSecurityController@generate2faSecret')->name('generate2faSecret');
+        Route::post('/admin/2fa/enable2fa', 'LoginSecurityController@enable2fa')->name('enable2fa');
+        Route::post('/admin/2fa/disable2fa', 'LoginSecurityController@disable2fa')->name('disable2fa');
+
+        // 2fa middleware
+        Route::post('/admin/2fa/2faVerify', function () {
+            return redirect(URL()->previous());
+        })->name('2faVerify')->middleware('2fa');
+
 
 //        Dashboard part started
         Route::get('/admin/dashboard', 'DashboardController@index')->name('dashboard');
@@ -119,6 +145,28 @@ Route::group([
         Route::post('/admin/logo/get-filter-logo-modal', 'LogoController@getFilterLogoModal')->name('get-filter-logo-modal');
         Route::get('/admin/logo/get-all-logo-json', 'LogoController@getAllLogoJson')->name('get-all-logo-json');
 //        Logo Part Ended
+
+//        EPP Part Started
+
+        Route::get('/admin/epp/domain', 'EPPControler@domain')->name('epp-domain');
+        Route::post('/admin/epp/domain', 'EPPControler@domain')->name('epp-domain-process');
+        Route::get('/admin/epp/authcode', 'EPPControler@authcode')->name('epp-authcode');
+        Route::post('/admin/epp/update-auth-code', 'EPPControler@updateAuthCode')->name('update-auth-code');
+        Route::post('/admin/epp/generate-random-code', 'EPPControler@generateRandomCode')->name('generate-random-code');
+        Route::get('/admin/epp/register', 'EPPControler@register')->name('epp-register');
+        Route::post('/admin/epp/register-domain', 'EPPControler@registerDomain')->name('register-domain');
+        Route::get('/admin/epp/transfer', 'EPPControler@transfer')->name('epp-transfer');
+        Route::post('/admin/epp/transfer-domain', 'EPPControler@transferDomain')->name('transfer-domain');
+        Route::get('/admin/epp/delete', 'EPPControler@delete')->name('epp-delete');
+        Route::post('/admin/epp/delete-confirm', 'EPPControler@deleteConfirm')->name('delete-confirm');
+        Route::post('/admin/epp/delete-confirm-process', 'EPPControler@deleteConfirmProcess')->name('delete-confirm-process');
+        Route::get('/admin/epp/undelete', 'EPPControler@undelete')->name('epp-undelete');
+        Route::post('/admin/epp/undelete-confirm', 'EPPControler@undeleteConfirm')->name('undelete-confirm');
+        Route::post('/admin/epp/undelete-confirm-process', 'EPPControler@undeleteConfirmProcess')->name('undelete-confirm-process');
+        Route::get('/admin/epp/messages', 'EPPControler@messages')->name('epp-messages');
+        Route::post('/admin/epp/poll-ack', 'EPPControler@pollAck')->name('poll-ack');
+
+//        EPP Part Ended
 
     });
 

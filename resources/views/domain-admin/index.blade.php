@@ -10,7 +10,7 @@
             <div class="container-fluid">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ __('admin-domain.title') }}</h3>
+                        <h3 class="card-title" style="margin-top: 5px;">{{ __('admin-domain.title') }}</h3>
                         <a href="{{route('add-new-domain')}}" class="btn btn-primary float-right btn-sm">
                             {{ __('admin-domain.addNewDomainButton') }}</a>
                     </div>
@@ -20,6 +20,10 @@
                                 {{ session()->get('message') }}
                             </div>
                         @endif
+                        <div class="row col-md-12">
+                            <span id="selectedInfoSpan"
+                                  style="margin-top: -10px; margin-bottom: 10px; font-size: 12px;"></span>
+                        </div>
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group has-search input-group">
@@ -54,54 +58,79 @@
                                @if(isset($_REQUEST['title']))value="{{$_REQUEST['title']}}"@endif>
                         <input type="hidden" name="is_deleted"
                                @if(isset($_REQUEST['is_deleted']))value="{{$_REQUEST['is_deleted']}}"@endif>
+                        <div id="domainLoader" style="display: none">
+                            <center><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></center>
+                        </div>
                         @if(isset($domains))
                             <table class="table table-striped table-bordered data_table_yajra_manual"
+                                   data-total-count="<?=$domain_count?>"
+                                   data-table-name="domains-table"
                                    style="width:100%">
                                 <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>ID</th>
-                                    <th>Info</th>
-                                    <th>Domain</th>
-                                    <th>Titel</th>
-                                    <th>Landingpage-Modus</th>
-                                    <th>Brandable</th>
-                                    <th class="no-sort">Aktion</th>
+                                    <th class="no-sort"
+                                        style="text-align: right; padding-right: 15px; width: 40px !important;">#
+                                    </th>
+                                    <th style="text-align: right; padding-right: 0px; width: 40px !important;">ID</th>
+                                    <th style="width: 200px !important;">Domain</th>
+                                    <th class="no-sort" style="width: 200px !important;">Domain-Titel</th>
+                                    <th class="no-sort" style="width: 70px !important;">Info</th>
+                                    <th class="no-sort" style="width: 150px !important;">Landingpage-Modus</th>
+                                    <th class="no-sort"
+                                        style="text-align: center; padding-right: 5px !important; width: 70px !important;">
+                                        Brandable
+                                    </th>
+                                    <th class="no-sort" style="width: 40px !important;">Aktion</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($domains as $domain)
                                     <tr>
-                                        <td style="text-align: right">{{ $loop->index+1 }}</td>
-                                        <td style="text-align: right">{{$domain->adomino_com_id}}</td>
+                                        <td><p style="text-align: right;margin: 0px">{{ $loop->index+1 }}</p></td>
+                                        <td><p style="text-align: right;margin: 0px">{{$domain->adomino_com_id}}</p>
+                                        </td>
+                                        <td><a style="color:rgb(0 0 153)" href="http://{{$domain->domain}}"
+                                               target="_blank">{{$domain->domain}}</a></td>
+                                        <td>{{$domain->title}}</td>
                                         <td>
                                             @php($info="")
-                                            @if (!empty($domain->getTranslation('info', 'de')))
+                                            @php($info_json=json_decode($domain->info,true))
+                                            {{--@if (!empty($domain->getTranslation('info', 'de')))--}}
+                                            {{--@php($info.="d")--}}
+                                            {{--@endif--}}
+                                            {{--@if (!empty($domain->getTranslation('info', 'en')))--}}
+                                            {{--@php($info.="e")--}}
+                                            {{--@endif--}}
+                                            @if (isset($info_json['de']) && !empty($info_json['de']))
                                                 @php($info.="d")
                                             @endif
-                                            @if (!empty($domain->getTranslation('info', 'en')))
+                                            @if (isset($info_json['de']) && !empty($info_json['en']))
                                                 @php($info.="e")
                                             @endif
+
                                             {{$info}}
                                         </td>
-                                        <td>{{$domain->domain}}</td>
-                                        <td>{{$domain->title}}</td>
                                         <td>{{\App\Domain::getLandingPageMode()[$domain->landingpage_mode]}}</td>
                                         <td>
                                             @if($domain->brandable)
-                                                <i class="fa fa-check-circle"
-                                                   style="font-size: 20px;color: #0cbb0cb3;"></i>
+                                                <p style="margin-bottom: 0px; line-height: 0px; text-align: center; margin-left: 10px;">
+                                                    <i
+                                                            class="fa fa-check"
+                                                            style="font-size: 20px;color: #0cbb0cb3;"></i></p>
                                             @else
-                                                <i class="fa fa-times-circle"
-                                                   style="font-size: 20px;color: #ff0000b5;"></i>
+                                                <p style="margin-bottom: 0px; line-height: 0px; text-align: center; margin-left: 10px;">
+                                                    <i
+                                                            class="fa fa-minus"
+                                                            style="font-size: 10px;color: gray;"></i></p>
                                             @endif
                                         </td>
-                                        <td>
+                                        <td style="line-height: 0px;">
                                             <a href="{{route('edit-domain', [$domain->id])}}"
                                                style="cursor: pointer;color: black"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;
                                             <label data-href="{{route('get-delete-domain-modal')}}"
                                                    data-id="{{$domain->id}}"
-                                                   data-name="get-delete-inquiry-modal" style="cursor: pointer"
+                                                   data-name="get-delete-inquiry-modal"
+                                                   style="cursor: pointer; margin-bottom: 0px;"
                                                    class="OpenModal"><i class="fa fa-trash"></i></label>
                                         </td>
                                     </tr>

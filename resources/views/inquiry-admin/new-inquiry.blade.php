@@ -42,10 +42,11 @@
                                     {{--@else value="{{date('m.d.Y H:i')}}" @endif--}}
                                     {{--name="created_at" required/>--}}
                                     {{--<input type="date" class="form-control">--}}
-                                    <input type="text" id="datemask" class="form-control"
+                                    <input type="text" id="datemask"
                                            @if(isset($inquiry))
                                            value="{{date('Y-m-d H:i',strtotime($inquiry->created_at))}}"
-                                           @else value="{{date('Y-m-d H:i')}}" @endif
+                                           class="form-control"
+                                           @else value="{{date('Y-m-d H:i')}}" class="form-control created_at_inquiry" @endif
                                            name="created_at"
                                            data-inputmask-alias="datetime"
                                            data-inputmask-inputformat="yyyy-mm-dd HH:mm" data-mask></div>
@@ -58,6 +59,7 @@
                                        class="col-sm-2 col-form-label">{{ __('admin-inquiry.domainInputField') }} <code>*</code></label>
                                 <div class="col-sm-4">
                                     <input  required
+                                            oninput="this.setCustomValidity('')"
                                             oninvalid="this.setCustomValidity('Bitte geben Sie in das Feld etwas ein')"
                                             @if(old('domain'))
                                             value="{{old('domain')}}"
@@ -144,6 +146,7 @@
                                     <code>*</code></label>
                                 <div class="col-sm-4">
                                     <input required
+                                           oninput="this.setCustomValidity('')"
                                            oninvalid="this.setCustomValidity('Bitte geben Sie in das Feld etwas ein')"
                                            @if(old('surname'))
                                            value="{{old('surname')}}"
@@ -209,6 +212,7 @@
                                     <code>*</code></label>
                                 <div class="col-sm-4">
                                     <input required
+                                           oninput="this.setCustomValidity('')"
                                            oninvalid="this.setCustomValidity('Bitte geben Sie in das Feld etwas ein')"
                                            @if(old('email'))
                                            value="{{old('email')}}"
@@ -249,8 +253,8 @@
                             <button type="submit" class="btn btn-primary btn-sm float-right">
                                 @if(isset($inquiry)) {{ __('admin-inquiry.updateInquiryButton') }} @else {{ __('admin-inquiry.createNewInquiryButton') }}@endif
                             </button>
-                            <a href="{{route('inquiry')}}" type="submit"
-                               class="btn btn-secondary btn-sm float-right filterButton">
+                            <a href="{{route('inquiry')}}"
+                               class="btn btn-default btn-sm float-right filterButton" style="border-color: #dedbdb;">
                                 Abbrechen
                             </a>
                         </div>

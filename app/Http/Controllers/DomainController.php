@@ -10,6 +10,7 @@ class DomainController extends Controller
     public function __construct()
     {
         $this->return_array['sidebar'] = 'Domains';
+        $this->session_name = "domain_table";
     }
 
     public function getFilterDomainModal(Request $request)
@@ -43,6 +44,9 @@ class DomainController extends Controller
             dd('id not found');
         }
         $this->return_array['domain'] = \App\Domain::getDomain($id);
+        $info = json_decode($this->return_array['domain']->info, true);
+        $this->return_array['domain']->info_de = (isset($info['de']) && !empty($info['de'])) ? $info['de'] : '';
+        $this->return_array['domain']->info_en = (isset($info['en']) && !empty($info['en'])) ? $info['en'] : '';
         $this->return_array['landingpage_mode'] = \App\Domain::getLandingPageMode();
         return view('domain-admin.new-domain')->with($this->return_array);
     }
@@ -53,11 +57,12 @@ class DomainController extends Controller
             'domain' => 'required|unique:domains,domain',
             'adomino_com_id' => 'unique:domains,adomino_com_id|numeric'
         ]);
-        $requestArray = $request->except(['_token']);
+        $requestArray = $request->except(['_token', 'old_url']);
         if (isset($requestArray['brandable']))
             $requestArray['brandable'] = 1;
         else
             $requestArray['brandable'] = 0;
+        $requestArray['info'] = json_encode(array('de' => $requestArray['info_de'], 'en' => $requestArray['info_en']));
         \App\Domain::saveDomain($requestArray);
         return redirect()->back()->with('message', __('admin-domain.addDomainSuccessMessage'));
     }
@@ -68,13 +73,16 @@ class DomainController extends Controller
             'domain' => 'required|unique:domains,domain,' . $request->id,
             'adomino_com_id' => 'numeric|unique:domains,adomino_com_id,' . $request->id,
         ]);
-        $requestArray = $request->except(['_token']);
+        $requestArray = $request->except(['_token', 'old_url']);
         if (isset($requestArray['brandable']))
             $requestArray['brandable'] = 1;
         else
             $requestArray['brandable'] = 0;
+        $requestArray['info'] = json_encode(array('de' => $requestArray['info_de'], 'en' => $requestArray['info_en']));
+        unset($requestArray['info_de']);
+        unset($requestArray['info_en']);
         \App\Domain::saveDomain($requestArray);
-        return redirect()->back()->with('message', __('admin-domain.updateDomainSuccessMessage'));
+        return redirect()->back()->with(['message' => __('admin-domain.updateDomainSuccessMessage'), 'old_url' => $request->old_url]);
     }
 
     public function addNewDomainPage()
@@ -85,6 +93,7 @@ class DomainController extends Controller
 
     public function index()
     {
+        \App\User::clearSession($this->session_name);
 //        $this->return_array['page_length'] = -1;
 //        $this->return_array['page_length'] = 10;
 //        $this->return_array['columns'] = array(
@@ -180,6 +189,7 @@ class DomainController extends Controller
                 });
             }
             $this->return_array['domains'] = $query->orderBy('domain', 'asc')->get();
+            $this->return_array['domain_count'] = \App\Domain::getCountAllDomain();
         }
         return view('domain-admin.index')->with($this->return_array);
     }

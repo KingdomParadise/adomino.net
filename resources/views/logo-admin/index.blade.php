@@ -1,5 +1,10 @@
 @extends('layouts.admin')
 @section('content')
+    <style>
+        .dataTables_paginate{
+            display: none !important;
+        }
+    </style>
     <div class="content-wrapper">
         <div class="content-header">
             <div class="container-fluid">
@@ -10,7 +15,7 @@
             <div class="container-fluid">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ __('admin-logo.title') }}</h3>
+                        <h3 class="card-title" style="margin-top: 5px;">{{ __('admin-logo.title') }}</h3>
                         <a href="{{route('add-new-logo')}}" class="btn btn-primary float-right btn-sm">
                             {{ __('admin-logo.addNewLogoButton') }}</a>
                     </div>
@@ -35,10 +40,10 @@
                                 </div>
                             </div>
                             <div class="col-md-8">
-                                <button data-href="{{route('get-filter-logo-modal')}}"
+                                <!-- <button data-href="{{route('get-filter-logo-modal')}}"
                                         data-id="" class="btn btn-default float-right OpenModal"><i
                                             class="fa fa-filter"></i>
-                                </button>
+                                </button> -->
                                 <label data-href="{{route('get-delete-logo-modal')}}"
                                        data-id=""
                                        data-name="get-multi-option-modal" style="cursor: pointer"
@@ -60,6 +65,24 @@
                                     <th data-column="{{$column_key}}"
                                         @if(isset($column_val['type']))
                                         data-custom-type="{{$column_val['type']}}"
+                                        @endif
+                                        @if($column_val['name'] == 'Logo-ID')
+                                        style="text-align: right; padding-right: 12px; width:52px;" 
+                                        @endif
+                                        @if($column_val['name'] == '#')
+                                        style="text-align: right !important; padding-right: 6px; width:20px;"
+                                        @endif
+                                        @if($column_val['name'] == 'Aktiv?')
+                                        style="text-align: center !important; width:50px; padding-left: 12px !important;" 
+                                        @endif
+                                        @if($column_val['name'] == 'Aktion')
+                                        style="width:50px;" 
+                                        @endif
+                                        @if($column_val['name'] == 'Sortierung')
+                                        style="width:70px;"
+                                        @endif
+                                        @if($column_val['name'] == 'Logo')
+                                        style="text-align: center !important; width:120px; padding-left: 12px !important;" 
                                         @endif
                                         data-sort="{{$column_val['sort']}}">{!! $column_val['name'] !!}</th>
                                 @endforeach

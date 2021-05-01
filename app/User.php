@@ -37,6 +37,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function loginSecurity()
+    {
+        return $this->hasOne('App\LoginSecurity');
+    }
+
+    public static function clearSession($session_name)
+    {
+        $session_datas = session()->all();
+        foreach ($session_datas as $key => $session_data) {
+            if (strpos($key, "_table") !== false && $key != $session_name) {
+                session([$key => []]);
+            }
+        }
+    }
+
     public static function addUser($user_detail_array)
     {
         $user = new User();

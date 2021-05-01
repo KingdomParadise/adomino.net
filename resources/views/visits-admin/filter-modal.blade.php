@@ -5,10 +5,11 @@
             <div class="form-group row">
                 <label>Pro Seite</label>
                 <select class="form-control" name="per_page">
-                    <option>10</option>
                     <option>25</option>
                     <option>50</option>
                     <option>100</option>
+                    <option selected>500</option>
+                    <option>1000</option>
                     <option value="-1">All</option>
                 </select>
             </div>
@@ -19,7 +20,7 @@
             </button>
             <button type="button" class="btn btn-primary btn-sm"
                     id="filterSubmitButton">
-                Speichern
+                Anwenden
             </button>
         </div>
     </form>

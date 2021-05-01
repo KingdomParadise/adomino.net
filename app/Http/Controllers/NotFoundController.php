@@ -10,11 +10,12 @@ class NotFoundController extends Controller
     public function __construct()
     {
         $this->return_array['sidebar'] = 'Fehler-Domains';
+        $this->session_name = "not_found_table";
     }
 
     public function getFilterNfDomainModal()
     {
-        $return_array['ModalTitle'] = 'Filter Not Found Domain';
+        $return_array['ModalTitle'] = 'Fehler-Domains Filter';
         return (string)view('not-found-domain-admin.filter-modal')->with($return_array);
     }
 
@@ -23,7 +24,11 @@ class NotFoundController extends Controller
         $this->validate($request, [
             'id' => 'required',
         ]);
-        \App\NotFoundDomain::deleteDomain($request->id);
+        if ($request->id == 'multi') {
+            \App\NotFoundDomain::deleteAllDomain();
+        } else {
+            \App\NotFoundDomain::deleteDomain($request->id);
+        }
         return redirect()->back()->with('message', __('admin-nfdomain.deleteDomainSuccessMessage'));
     }
 
@@ -32,7 +37,7 @@ class NotFoundController extends Controller
         $this->validate($request, [
             'id' => 'required'
         ]);
-        $return_array['ModalTitle'] = 'Domain löschen';
+        $return_array['ModalTitle'] = 'Fehlgeleitete Domains löschen';
         $return_array['id'] = $request->id;
         return (string)view('not-found-domain-admin.delete-domain-modal')->with($return_array);
     }
@@ -74,10 +79,14 @@ class NotFoundController extends Controller
 
     public function getAllDomainsJson()
     {
+        session([$this->session_name => [
+            'search' => $_REQUEST['search']['value'],
+            'page_length' => $_REQUEST['length'],
+        ]]);
         return DataTables::of(\App\NotFoundDomain::all())
-            ->addColumn('checkbox', function ($domain) {
-                return '<input type="checkbox" data-row-id="' . $domain->id . '" class="selectCheckBox"/>';
-            })
+//            ->addColumn('checkbox', function ($domain) {
+//                return '<input type="checkbox" data-row-id="' . $domain->id . '" class="selectCheckBox"/>';//
+//            })
             ->editColumn('id', function ($domain) {
                 return '<p style="text-align: right;margin: 0px">' . $domain->id . '</p>';
             })
@@ -87,47 +96,48 @@ class NotFoundController extends Controller
             ->editColumn('domain', function ($domain) {
                 return $domain->domain;
             })
-            ->addColumn('actions', function ($domain) {
-                return '
-                <a href="' . route('edit-nf-domain', [$domain->id]) . '"
-                style="cursor: pointer;color: black"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;
-                <label data-href="' . route('get-delete-nfdomain-modal') . '"
-                data-id="' . $domain->id . '"
-                data-name="get-delete-inquiry-modal" style="cursor: pointer" class="OpenModal"><i class="fa fa-trash"></i></label>';
-            })
+//            ->addColumn('actions', function ($domain) {
+//                return '
+//                <a href="' . route('edit-nf-domain', [$domain->id]) . '"
+//                style="cursor: pointer;color: black"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;
+//                <label data-href="' . route('get-delete-nfdomain-modal') . '"
+//                data-id="' . $domain->id . '"
+//                data-name="get-delete-inquiry-modal" style="cursor: pointer" class="OpenModal"><i class="fa fa-trash"></i></label>';
+//            })
             ->rawColumns([
-                'checkbox',
+//                'checkbox',
                 'id',
                 'created_at',
                 'domain',
-                'actions',
+//                'actions',
             ])->make(true);
     }
 
     public function index()
     {
-        $this->return_array['page_length'] = 10;
+        \App\User::clearSession($this->session_name);
+        $this->return_array['page_length'] = 500;
         $this->return_array['columns'] = array(
-            'checkbox' => array(
-                'name' => '<input type="checkbox" id="selectAllCheckbox"/>',
-                'sort' => false,
-            ),
+//            'checkbox' => array(
+//                'name' => '',//<input type="checkbox" id="selectAllCheckbox"/>
+//                'sort' => false,
+//            ),
             'id' => array(
                 'name' => 'ID',
                 'sort' => true,
             ),
             'created_at' => array(
                 'name' => 'Uhrzeit',
-                'sort' => false,
+                'sort' => true,
             ),
             'domain' => array(
                 'name' => 'Domain',
-                'sort' => false,
+                'sort' => true,
             ),
-            'actions' => array(
-                'name' => 'Actions',
-                'sort' => false,
-            ),
+//            'actions' => array(
+//                'name' => 'Actions',
+//                'sort' => false,
+//            ),
         );
         return view('not-found-domain-admin.index')->with($this->return_array);
     }

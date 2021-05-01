@@ -10,20 +10,22 @@ class VisitsController extends Controller
     public function __construct()
     {
         $this->return_array['sidebar'] = 'Aufrufe IP';
+        $this->session_name = "visits_table";
     }
 
     public function getFilterModal()
     {
-        $return_array['ModalTitle'] = 'Filter Aufrufe IP';
+        $return_array['ModalTitle'] = 'Aufrufe IP-Adresse Filter';
         return (string)view('visits-admin.filter-modal')->with($return_array);
     }
 
     public function index()
     {
-        $this->return_array['page_length'] = 25;
+        \App\User::clearSession($this->session_name);
+        $this->return_array['page_length'] = 500;
         $this->return_array['columns'] = array(
             'created_at' => array(
-                'name' => 'Erstellt AM',
+                'name' => 'Uhrzeit',
                 'sort' => true,
             ),
             'domains.domain' => array(
@@ -31,7 +33,7 @@ class VisitsController extends Controller
                 'sort' => true,
             ),
             'ip' => array(
-                'name' => 'IP',
+                'name' => 'IP-Adresse',
                 'sort' => true,
             ),
         );
@@ -45,10 +47,10 @@ class VisitsController extends Controller
                 return '<p style="text-align: right;margin: 0px">' . $visits->created_at . '</p>';
             })
             ->editColumn('domains.domain', function ($visits) {
-                return $visits->domain;
+                return '<a style="color:rgb(0 0 153)"  href="http://' . $visits->domain . '" target="_blank">' . $visits->domain . '</a>';
             })
             ->editColumn('ip', function ($visits) {
-                return '<p style="text-align: right;margin: 0px">' . $visits->ip . '</p>';
+                return '<p style="text-align: left;margin: 0px">' . $visits->ip . '</p>';
             })
             ->rawColumns([
                 'created_at',

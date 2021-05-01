@@ -10,9 +10,9 @@ use Spatie\Translatable\HasTranslations;
 class Domain extends Model
 {
 //    use SoftDeletes, HasTranslations, SetGetDomain;
-    use SoftDeletes, HasTranslations;
+    use SoftDeletes;
 
-    public $translatable = ['info'];
+//    public $translatable = ['info'];
 
     /**
      * The attributes that are not mass assignable.
@@ -23,6 +23,11 @@ class Domain extends Model
         'created_at', 'updated_at',
     ];
 
+    public static function getCountAllDomain()
+    {
+        return Domain::count();
+    }
+
     public static function findDomainByName($domain)
     {
         return Domain::where('domain', $domain)->first();
@@ -30,7 +35,7 @@ class Domain extends Model
 
     public static function displayDomain($domain, $domainId)
     {
-        return "<a href='" . route('edit-domain', [$domainId]) . "'><img src='" . url('/img/wpage.gif') . "'/></a>&nbsp;" . '<a href="http://' . $domain . '" target="_blank">' . $domain . '</a>';
+        return "<a  href='" . route('edit-domain', [$domainId]) . "'><img src='" . url('/img/wpage.gif') . "' style='margin-right:10px;' /></a>&nbsp;" . '<a style="color:rgb(0 0 153)" href="http://' . $domain . '" target="_blank">' . $domain . '</a>';
     }
 
     public static function deleteDomain($id)

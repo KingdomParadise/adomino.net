@@ -13,7 +13,7 @@ return [
     'edituserTitle' => 'Benutzer aktualisieren',
     'backButton' => 'Zurück',
     'updateUserButton' => 'Benutzer aktualisieren',
-    'createUserButton' => 'Neuen Benutzer hinzufügen',
+    'createUserButton' => 'Benutzer hinzufügen',
     'userDeleteConfirmationMessage' => 'Möchten Sie diesen Benutzer wirklich löschen?',
     'no' => 'Nein',
     'deleteButton' => 'Löschen',

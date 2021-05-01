@@ -19,6 +19,30 @@ class statistic extends Model
         return $this->belongsTo('App\Domain');
     }
 
+    public static function getStatisticCount($columns, $start_date, $end_date, $statistic)
+    {
+        $total = 0;
+        $totalColumns = 0;
+        foreach ($columns as $column) {
+            if (strpos($column, "day") !== false) {
+                $columnDate = str_replace('day', '', $column);
+                if (self::check_in_range($start_date, $end_date, $columnDate, true)) {
+                    $total += $statistic->$column;
+                    $totalColumns++;
+                }
+            }
+        };
+        return [$totalColumns, $total];
+    }
+
+    public static function check_in_range($start_date, $end_date, $date_from_user, $debug = false)
+    {
+        $start = strtotime($start_date);
+        $end = strtotime($end_date);
+        $check = strtotime($date_from_user);
+        return (($start <= $check) && ($check <= $end));
+    }
+
     public static function getContentCount()
     {
         return statistic::count();

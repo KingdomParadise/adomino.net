@@ -52,6 +52,24 @@
                             <tr>
                                 @foreach($columns as $column_key=>$column_val)
                                     <th data-column="{{$column_key}}"
+                                        @if($column_val['name'] == 'Uhrzeit')
+                                            style="text-align: right; padding-right: 3px; width: 75px !important;"
+                                        @endif
+                                        @if($column_val['name'] == 'Domain')
+                                            style="width: 300px !important;"
+                                        @endif
+                                        @if($column_key == 'visits')
+                                            style="text-align: right; padding-right: 0px;"
+                                        @endif
+                                        @if($column_key == 'adomino_com_total')
+                                            style="text-align: right; padding-right: 0px;"
+                                        @endif
+                                        @if($column_key == 'total')
+                                            style="text-align: right; padding-right: 0px;"
+                                        @endif
+                                        @if($column_key == 'adomino_com_ok')
+                                            style="text-align: center;"
+                                        @endif
                                         data-sort="{{$column_val['sort']}}">{!! $column_val['name'] !!}</th>
                                 @endforeach
                             </tr>

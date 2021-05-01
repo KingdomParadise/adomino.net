@@ -1,10 +1,19 @@
 @extends('layouts.modal-layout')
 @section('content')
-    <form id="filterStatisticsForm" method="post">
+    <form id="filterStatisticsForm" onsubmit="return false;" method="post">
         <div class="modal-body">
+            {{--<div class="form-group row">--}}
+                {{--<label>Nein des Tages</label>--}}
+                {{--<input type="number" class="form-control" name="no_of_days" min="1">--}}
+            {{--</div>--}}
             <div class="form-group row">
-                <label>Nein des Tages</label>
-                <input type="number" class="form-control" name="no_of_days" min="1">
+                <label>Filtern nach Datumsbereich</label>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control singleDatePicker">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                    </div>
+                </div>
             </div>
             {{--<div class="form-group row">--}}
             {{--<label>Filtern nach Datumsbereich</label>--}}
@@ -30,10 +39,11 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default btn-sm"
-                    data-dismiss="modal">Abbrechen</button>
+                    data-dismiss="modal">Abbrechen
+            </button>
             <button type="button" class="btn btn-primary btn-sm"
                     id="filterStatisticsButton">
-                Speichern
+                Anwenden
             </button>
         </div>
     </form>

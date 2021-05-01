@@ -42,4 +42,9 @@ class NotFoundDomain extends Model
     {
         return NotFoundDomain::find($id)->delete();
     }
+
+    public static function deleteAllDomain()
+    {
+        return NotFoundDomain::truncate();
+    }
 }

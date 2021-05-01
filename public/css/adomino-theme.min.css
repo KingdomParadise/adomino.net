@@ -5103,8 +5103,8 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 
 .card-footer {
     padding: .75rem 1.25rem;
-    background-color: rgba(0, 0, 0, .03);
-    border-top: 0 solid rgba(0, 0, 0, .125)
+    background-color: rgba(0, 0, 0, 0);
+    border-top: 1px solid #e9ecef;
 }
 
 .card-footer:last-child {
@@ -31002,7 +31002,7 @@ html.maximized-card {
 }
 
 .btn-default {
-    background-color: #f8f9fa;
+    background-color: white;
     border-color: #ddd;
     color: #444
 }

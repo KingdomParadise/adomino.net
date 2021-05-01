@@ -2,14 +2,14 @@
 
 return [
     'title' => 'Domainliste',
-    'addNewDomainButton' => 'neue Domain erstellen',
+    'addNewDomainButton' => 'Domain hinzufügen',
     'editdomainTitle' => 'Domain bearbeiten',
-    'adddomainTitle' => 'Neue Domain hinzufügen',
+    'adddomainTitle' => 'Domain hinzufügen',
     'backButton' => 'Zurück',
     'updateDomainButton' => 'Domain aktualisieren',
-    'createDomainButton' => 'Domain erstellen',
+    'createDomainButton' => 'Speichern',
     'createNewDomainInput' => 'Domain',
-    'createNewDomainTitleInput' => 'Titel',
+    'createNewDomainTitleInput' => 'Domain-Titel',
     'createNewDomainAdominoComIdInput' => 'adomino.com ID',
     'createNewDomainLandingPageModeInput' => 'Landingpage-Modus',
     'createNewDomainSelectLandingPageModeInput' => 'Eine Option auswählen',
@@ -25,5 +25,5 @@ return [
     'deleteDomainSuccessMessage' => 'Domain erfolgreich gelöscht',
     'deleteDomainButton' => 'Domain löschen',
     'filterDomainButton' => 'Filter',
-    'filterDomainModalTitle' => 'Filter Domain',
+    'filterDomainModalTitle' => 'Domain Filter',
 ];

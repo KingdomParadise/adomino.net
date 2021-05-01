@@ -4,7 +4,7 @@
     <div class="login-box">
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <img src="{{url('img/logo.png')}}" style="width: 85%;"/>
+                <img src="{{url('img/logo.png')}}" style="width: 60%; margin-left:12px;"/>
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
@@ -44,7 +44,7 @@
                             <div class="icheck-primary">
                                 <input type="checkbox" name="remember"
                                        id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                <label for="remember">
+                                <label for="remember" style="color: #171819; margin-left: 5px; font-weight: 400;">
                                     Remember Me
                                 </label>
                             </div>

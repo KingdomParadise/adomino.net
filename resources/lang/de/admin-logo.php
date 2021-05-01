@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'title' => 'Logos',
-    'addNewLogoButton' => 'Neues Logo hinzufügen',
+    'title' => 'Kundenlogos',
+    'addNewLogoButton' => 'Logo hinzufügen',
     'deleteLogoButton' => 'löschen',
-    'editLogoTitle' => 'Logo bearbeiten',
-    'addLogoTitle' => 'Neues Logo hinzufügen',
+    'editLogoTitle' => 'Kundenlogo bearbeiten',
+    'addLogoTitle' => 'Kundenlogo hinzufügen',
     'backButton' => 'Zurück',
     'createNewLogoActiveInput' => 'Aktiv?',
     'createNewLogoInput' => 'Logo',

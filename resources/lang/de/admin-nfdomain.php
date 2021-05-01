@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'title' => 'Fehler-Domains',
-    'addNewDomainButton' => 'neue Domain hinzufügen',
+    'title' => 'Fehlgeleitete Domains',
+    'addNewDomainButton' => 'Domain hinzufügen',
     'adddomainTitle' => 'Neue Domain',
     'editdomainTitle' => 'Domain bearbeiten',
     'backButton' => 'Zurück',

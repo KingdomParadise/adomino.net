@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'title' => 'STATISTIK',
+    'title' => 'Aufrufe Detail',
     'filterStatisticsButton' => 'Filter',
-    'filterDomainModalTitle' => 'Filter Statistik',
+    'filterDomainModalTitle' => 'Statistik Filter',
     'no' => 'Nein',
 ];

@@ -48,6 +48,12 @@
                             <tr>
                                 @foreach($columns as $column_key=>$column_val)
                                     <th data-column="{{$column_key}}"
+                                        @if($column_val['name'] == 'Uhrzeit')
+                                        style="text-align: right; padding-right: 5px; width: 125px;"
+                                        @endif
+                                        @if($column_val['name'] == 'Domain')
+                                        style="width: 300px;"
+                                        @endif
                                         data-sort="{{$column_val['sort']}}">{!! $column_val['name'] !!}</th>
                                 @endforeach
                             </tr>

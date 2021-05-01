@@ -10,7 +10,7 @@
             <div class="container-fluid">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ __('admin-inquiry.title') }}</h3>
+                        <h3 class="card-title" style="margin-top: 5px;">{{ __('admin-inquiry.title') }}</h3>
                         <a href="{{route('add-new-inquiry')}}" class="btn btn-primary float-right btn-sm">
                             {{ __('admin-inquiry.addNewInquiryButton') }}</a>
                     </div>
@@ -24,7 +24,11 @@
                             <div class="col-md-4">
                                 <div class="form-group has-search input-group">
                                     <span class="fa fa-search form-control-feedback"></span>
-                                    <input type="text" class="form-control" id="yajraSearch" placeholder="Suche">
+                                    <input type="text" class="form-control"
+                                           @if(!empty(session('inquiry_table')) && isset(session('inquiry_table')['search']) && !empty(session('inquiry_table')['search']))
+                                           value="{{session('inquiry_table')['search']}}"
+                                           @endif
+                                           id="yajraSearch" placeholder="Suche">
                                     <span class="input-group-append">
                                         <button type="button" class="btn btn-primary yajraBtnSearch">Suchen</button>
                                     </span>
@@ -53,12 +57,23 @@
                         <table class="table table-striped table-bordered data_table_yajra"
                                data-url="{{route('get-all-inquiries-json')}}"
                                data-table-name="inquiry-table"
-                               data-table-filter=""
+                               @if(!empty(session('inquiry_table')) && isset(session('inquiry_table')['filter']) && !empty(session('inquiry_table')['filter']))
+                               data-filter="{{session('inquiry_table')['filter']}}"
+                               @else
+                               data-filter=""
+                               @endif
+                               @if(!empty(session('inquiry_table')))
+                               data-table-show="1"
+                               @endif
                                data-custom-order="2"
                                data-custom-sort-type="desc"
                                cellpadding="0"
                                cellspacing="0"
+                               @if(!empty(session('inquiry_table')) && isset(session('inquiry_table')['page_length']) && !empty(session('inquiry_table')['page_length']))
+                               data-length="{{session('inquiry_table')['page_length']}}"
+                               @else
                                data-length="{{$page_length}}"
+                               @endif
                                style="display:none;width:100%">
                             <thead>
                             <tr>
@@ -66,6 +81,9 @@
                                     <th class="no-sort" data-column="{{$column_key}}"
                                         @if(isset($column_val['width']))
                                         data-width="{{$column_val['width']}}"
+                                        @endif
+                                        @if($column_val['name'] == 'Uhrzeit')
+                                        style="text-align: right; padding-right: 12px;"
                                         @endif
                                         data-sort="{{$column_val['sort']}}">{!! $column_val['name'] !!}</th>
                                 @endforeach

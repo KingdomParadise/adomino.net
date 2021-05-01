@@ -45,21 +45,134 @@
     font-size: 14px !important;
 }
 
+.data_table_yajra_manual {
+    margin: 0 auto;
+    width: 100%;
+    clear: both;
+    border-collapse: collapse;
+    table-layout: fixed;
+    word-wrap: break-word;
+    font-size: 14px !important;
+}
+
 /*table.table-bordered.dataTable th, table.table-bordered.dataTable td {*/
-    /*padding-bottom: 0px;*/
+/*padding-bottom: 0px;*/
 /*}*/
-.table td, .table th{
+.table td, .table th {
     padding-left: 5px !important;
     vertical-align: middle;
 }
 
-
-tbody tr td{
+tbody tr td {
     padding-bottom: 0px !important;
     padding-top: 0px !important;
 }
+
 /*table.table-bordered.dataTable td*/
-table.table-bordered.dataTable th{
+table.table-bordered.dataTable th {
     padding-bottom: 5px !important;
     padding-top: 5px !important;
+}
+
+div.dataTables_wrapper div.dataTables_processing {
+    padding: 0px;
+    background: transparent !important;
+    box-shadow: none;
+}
+
+table.dataTable > thead .sorting::before, table.dataTable > thead .sorting_asc::before, table.dataTable > thead .sorting_desc::before, table.dataTable > thead .sorting_asc_disabled::before, table.dataTable > thead .sorting_desc_disabled::before {
+    right: 2px;
+    /*content: "∧" !important;*/
+    content: "" !important;
+    top: 3px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+table.dataTable > thead .sorting::after, table.dataTable > thead .sorting_asc::after, table.dataTable > thead .sorting_desc::after, table.dataTable > thead .sorting_asc_disabled::after, table.dataTable > thead .sorting_desc_disabled::after {
+    right: 2px;
+    /*content: "∨" !important;*/
+    content: "" !important;
+    top: 11px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 8px rgb(102 175 233 / 60%);
+}
+
+.dropdown-menu {
+    min-width: 12rem;
+}
+
+table.dataTable thead th {
+    background: transparent !important;
+    white-space: nowrap;
+}
+
+table.dataTable thead span.sort-icon {
+    /*display: inline-block;*/
+    padding-left: 20px;
+    width: 16px;
+    height: 16px;
+}
+
+table.dataTable thead .sorting span {
+    background: url('http://cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/images/sort_both.png') no-repeat center right;
+}
+
+table.dataTable thead .sorting_asc span {
+    background: url('http://cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/images/sort_asc.png') no-repeat center right;
+}
+
+table.dataTable thead .sorting_desc span {
+    background: url('http://cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/images/sort_desc.png') no-repeat center right;
+}
+
+table.dataTable thead .sorting_asc_disabled span {
+    background: url('http://cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/images/sort_asc_disabled.png') no-repeat center right;
+}
+
+table.dataTable thead .sorting_desc_disabled span {
+    background: url('http://cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/images/sort_desc_disabled.png') no-repeat center right;
+}
+
+.EppInfoH3 {
+    color: #858585;
+    font-size: 1.17em;
+    font-weight: bold;
+}
+
+.domainInfo {
+    margin-top: 50px;
+}
+
+.domainInfoTexts {
+    font-size: 15px;
+    color: #222;
+    font-family: 'Montserrat', sans-serif;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.epp_error {
+    color: red;
+}
+
+.nav-link.disabled {
+    color: #6c757d !important;
+}
+
+.poll-button{
+    margin-top: 20px;
+}
+
+.info{
+    padding-top: 15px;
+    padding-bottom: 25px;
 }

@@ -10,11 +10,12 @@ class InquiryController extends Controller
     public function __construct()
     {
         $this->return_array['sidebar'] = 'Anfragen';
+        $this->session_name = "inquiry_table";
     }
 
     public function getFilterModal()
     {
-        $return_array['ModalTitle'] = 'Filter Anfragen';
+        $return_array['ModalTitle'] = 'Anfragen Filter';
         return (string)view('inquiry-admin.filter-modal')->with($return_array);
     }
 
@@ -128,10 +129,11 @@ class InquiryController extends Controller
 
     public function index()
     {
+        \App\User::clearSession($this->session_name);
         $this->return_array['page_length'] = 500;
         $this->return_array['columns'] = array(
             'checkbox' => array(
-                'name' => '<input type="checkbox" id="selectAllCheckbox"/>',
+                'name' => '',//<input type="checkbox" id="selectAllCheckbox"/>
                 'sort' => false,
                 'width' => '2px',
             ),
@@ -143,7 +145,7 @@ class InquiryController extends Controller
             'created_at' => array(
                 'name' => 'Uhrzeit',
                 'sort' => true,
-                'width' => '40px',
+                'width' => '50px',
             ),
             'domains.domain' => array(
                 'name' => 'Domain',
@@ -168,12 +170,12 @@ class InquiryController extends Controller
             'email' => array(
                 'name' => 'E-Mail',
                 'sort' => false,
-                'width' => '150px',
+                'width' => '138px',
             ),
             'anonymous' => array(
                 'name' => 'Anonymisieren',
                 'sort' => false,
-                'width' => '35px',
+                'width' => '47px',
             ),
         );
         return view('inquiry-admin.index')->with($this->return_array);
@@ -184,6 +186,11 @@ class InquiryController extends Controller
         $query = \App\Inquiry::select('inquiries.*', 'domains.domain as domain_name')
             ->join('domains', 'domains.id', '=', 'inquiries.domain_id');
         if (isset($_REQUEST['filter']) && !empty($_REQUEST['filter'])) {
+            session([$this->session_name => [
+                'filter' => $_REQUEST['filter'],
+                'search' => $_REQUEST['search']['value'],
+                'page_length' => $_REQUEST['length'],
+            ]]);
             $filterArray = json_decode($_REQUEST['filter'], true);
             if (isset($filterArray['no_of_days']) && !empty($filterArray['no_of_days']) && is_numeric($filterArray['no_of_days'])) {
                 $query->whereBetween('inquiries.created_at', [date('Y-m-d', strtotime("-" . $filterArray['no_of_days'] . " days")) . " 00:00:00", date('Y-m-d') . " 23:59:59"]);
@@ -196,6 +203,12 @@ class InquiryController extends Controller
                     $query->onlyTrashed();
                 }
             }
+        } elseif (isset($_REQUEST['search']['value'])) {
+            session([$this->session_name => [
+                'filter' => '',
+                'search' => $_REQUEST['search']['value'],
+                'page_length' => $_REQUEST['length'],
+            ]]);
         }
 
         return DataTables::of($query)
@@ -203,10 +216,10 @@ class InquiryController extends Controller
                 return '<input type="checkbox" data-row-id="' . $inquiry->id . '" class="selectCheckBox"/>';
             })
             ->editColumn('created_at', function ($inquiry) {
-                return '<p style="text-align: right;margin: 0px">'.date('Y-m-d H:i', strtotime($inquiry->created_at)).'</p>';
+                return '<p style="text-align: right;margin: 0px">' . date('Y-m-d H:i', strtotime($inquiry->created_at)) . '</p>';
             })
             ->editColumn('domains.domain', function ($inquiry) {
-                return '<a href="http://' . $inquiry->domain->domain . '" target="_blank">' . $inquiry->domain->domain . '</a>';
+                return '<a style="color:rgb(0 0 153)"  href="http://' . $inquiry->domain->domain . '" target="_blank">' . $inquiry->domain->domain . '</a>';
             })
             ->editColumn('gender', function ($inquiry) {
                 if ($inquiry->gender == 'm') {

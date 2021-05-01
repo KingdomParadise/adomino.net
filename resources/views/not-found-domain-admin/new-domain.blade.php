@@ -14,8 +14,6 @@
                                 {{ __('admin-nfdomain.editdomainTitle') }} @else
                                 {{ __('admin-nfdomain.adddomainTitle') }}
                             @endif</h3>
-                        <a href="{{route('not-found-domains')}}" class="btn btn-primary float-right btn-sm"><i
-                                    class="fa fa-reply"></i>&nbsp;&nbsp;{{ __('admin-nfdomain.backButton') }}</a>
                     </div>
                     <form method="post"
                           action="@if(isset($domain)){{route('update-nfdomain-process')}}@else{{route('add-new-nfdomain-process')}}@endif">
@@ -33,7 +31,7 @@
                                 <label for="{{ __('admin-nfdomain.createNewDomainCreatedAtInput') }}"
                                        class="col-sm-2 col-form-label">{{ __('admin-nfdomain.createNewDomainCreatedAtInput') }}
                                     <code>*</code></label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <input class="form-control" type="datetime-local" name="created_at"
                                            @if(isset($domain)) value="{{date('Y-m-d',strtotime($domain->created_at))."T".date('H:i:s',strtotime($domain->created_at))}}"
                                            @else value="{{date('Y-m-d')."T".date('H:i:s')}}" @endif>
@@ -50,15 +48,14 @@
                             <div class="form-group row">
                                 <label for="{{ __('admin-nfdomain.createNewDomainInput') }}"
                                        class="col-sm-2 col-form-label">{{ __('admin-nfdomain.createNewDomainInput') }}</label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <input class="form-control @error('domain') is-invalid @enderror"
                                            name="domain"
                                            @if(old('domain'))
                                            value="{{old('domain')}}"
                                            @elseif(isset($domain->domain))
                                            value="{{$domain->domain}}"
-                                           @endif
-                                           placeholder="{{ __('admin-nfdomain.createNewDomainInput') }}">
+                                           @endif>
                                     @error('domain')
                                     <span class="invalid-feedback error" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -74,6 +71,10 @@
                                         {{ __('admin-nfdomain.createDomainButton') }}
                                     @endif
                                 </button>
+                                <a href="{{url()->previous()}}"
+                                   class="btn btn-default btn-sm float-right filterButton" style="border-color: #797878">
+                                    Abbrechen
+                                </a>
                             </div>
                     </form>
                 </div>

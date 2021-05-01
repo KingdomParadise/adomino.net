@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="base-url" content="{{ url('/') }}">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Adomino Backend</title>
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/favicon.ico') }}">
     <link rel="stylesheet"
@@ -18,6 +18,14 @@
     <link rel="stylesheet" href="{{url('themes/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
     <link rel="stylesheet" href="{{url('css/adomino-theme.min.css')}}">
     <link rel="stylesheet" href="{{url('css/adomino.css')}}">
+    <script src="{{url('themes/jquery/jquery.min.js')}}"></script>
+    <script>
+        window.addEventListener('beforeunload', function (e) {
+            $('.data_table_yajra_manual').hide();
+            $('#statisticLoader').show();
+            $('#domainLoader').show();
+        });
+    </script>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -36,6 +44,9 @@
                     {{ Auth::user()->name }} &nbsp;<i class="fas fa-angle-down"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
+                    <a class="nav-link" href="{{ route('2fa-settings') }}">
+                        <i class="fas fa-fingerprint"></i>&nbsp;&nbsp;2fa-Einstellungen
+                    </a>
                     <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="{{ route('logout') }}"
                        onclick="event.preventDefault();
             document.getElementById('logout-form').submit();" role="button">
@@ -51,7 +62,7 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a href="{{url('/')}}" class="brand-link">
             {{--<span class="brand-text h3"><b>Adomino.</b>net</span>--}}
-            <img src="{{url('img/white_logo.png')}}" style="width: 60%; margin-left: 50px; margin-right: 15px;"/>
+            <img src="{{url('img/white_logo.png')}}" style="width: 60%; margin-left: 45px; margin-right: 15px;"/>
         </a>
         <div class="sidebar">
             <nav class="mt-2">
@@ -120,7 +131,7 @@
                                 <a href="{{route('visits')}}"
                                    class="nav-link @if($sidebar == 'Aufrufe IP') active @endif">
                                     <i class="nav-icon fas"></i>
-                                    <p>Aufrufe IP</p>
+                                    <p>Aufrufe IP-Adresse</p>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -169,6 +180,66 @@
                                 <a href="{{route('home')}}" class="nav-link @if($sidebar == 'Benutzer') active @endif">
                                     <i class="nav-icon fas"></i>
                                     <p>Benutzer</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item @if($sidebar == 'Epp Domain' || $sidebar == 'Epp Auth Code' || $sidebar == 'Epp Register' || $sidebar == 'Epp Transfer' || $sidebar == 'Epp Delete' || $sidebar == 'Epp Undelete' || $sidebar == 'Epp Messages') menu-open @endif">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-archway"></i>
+                            <p>
+                                EPP
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{route('epp-domain')}}"
+                                   class="nav-link @if($sidebar == 'Epp Domain') active @endif">
+                                    <i class="nav-icon fas"></i>
+                                    <p>Domain</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('epp-authcode')}}"
+                                   class="nav-link @if(empty(session('selected_domain'))) disabled @endif @if($sidebar == 'Epp Auth Code') active @endif">
+                                    <i class="nav-icon fas"></i>
+                                    <p>Authcode</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('epp-register')}}"
+                                   class="nav-link @if(empty(session('selected_domain'))) disabled @endif @if($sidebar == 'Epp Register') active @endif">
+                                    <i class="nav-icon fas"></i>
+                                    <p>Register</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('epp-transfer')}}"
+                                   class="nav-link @if(empty(session('selected_domain'))) disabled @endif @if($sidebar == 'Epp Transfer') active @endif">
+                                    <i class="nav-icon fas"></i>
+                                    <p>Transfer</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('epp-delete')}}"
+                                   class="nav-link @if($sidebar == 'Epp Delete') active @endif">
+                                    <i class="nav-icon fas"></i>
+                                    <p>Delete</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('epp-undelete')}}"
+                                   class="nav-link @if($sidebar == 'Epp Undelete') active @endif">
+                                    <i class="nav-icon fas"></i>
+                                    <p>Undelete</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('epp-messages')}}"
+                                   class="nav-link @if($sidebar == 'Epp Messages') active @endif">
+                                    <i class="nav-icon fas"></i>
+                                    <p>Messages</p>
                                 </a>
                             </li>
                         </ul>
@@ -259,12 +330,13 @@
 <div id="adominoModalContent">
 
 </div>
-<script src="{{url('themes/jquery/jquery.min.js')}}"></script>
 <script src="{{url('themes/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <script src="{{url('themes/data-table/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{url('js/data-table-localte.js')}}"></script>
 <script src="{{url('themes/data-table/js/dataTables.bootstrap4.min.js')}}"></script>
 <script src="{{url('themes/select2/js/select2.full.min.js')}}"></script>
 <script src="{{url('themes/moment/moment.min.js')}}"></script>
+<script src="{{url('js/moment-timezone.min.js')}}"></script>
 <script src="{{url('themes/daterangepicker/daterangepicker.js')}}"></script>
 <script src="{{url('themes/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
 <script src="{{url('themes/inputmask/jquery.inputmask.min.js')}}"></script>

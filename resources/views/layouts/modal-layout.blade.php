@@ -12,8 +12,8 @@
      tabindex="-1" role="dialog" style="z-index: 99999999999;">
     <div class="modal-dialog @if(isset($big_modal)) modal-lg @endif" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="defaultModalLabel">{{$ModalTitle}}</h4>
+            <div class="modal-header" style="padding-top: 5px; padding-bottom: 5px;">
+                <h5 class="modal-title" id="defaultModalLabel" >{{$ModalTitle}}</h5>
             </div>
             @yield('content')
         </div>

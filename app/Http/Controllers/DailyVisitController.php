@@ -10,25 +10,27 @@ class DailyVisitController extends Controller
     public function __construct()
     {
         $this->return_array['sidebar'] = 'Aufrufe Tag';
+        $this->session_name = "daily_visits_table";
     }
 
     public function getFilterModal()
     {
-        $return_array['ModalTitle'] = 'Filter Aufrufe Tag';
+        $return_array['ModalTitle'] = 'Aufrufe Tag Filter';
         return (string)view('daily-visit-admin.filter-modal')->with($return_array);
     }
 
     public function index()
     {
-        $this->return_array['page_length'] = 25;
+        \App\User::clearSession($this->session_name);
+        $this->return_array['page_length'] = 500;
         $this->return_array['columns'] = array(
             'day' => array(
-                'name' => 'Day',
+                'name' => 'Uhrzeit',
                 'sort' => true,
             ),
             'domains.domain' => array(
                 'name' => 'Domain',
-                'sort' => false,
+                'sort' => true,
             ),
             'visits' => array(
                 'name' => '	Visits_Adomino_net',
@@ -71,9 +73,9 @@ class DailyVisitController extends Controller
             })
             ->editColumn('adomino_com_ok', function ($dailyVisit) {
                 if ($dailyVisit->adomino_com_ok) {
-                    return '<i class="fa fa-check-circle" style="font-size: 20px;color: #0cbb0cb3;"></i>';
+                    return '<p style="text-align:center; margin-bottom:0px; line-height:0px;"><i class="fa fa-check-circle" style="font-size: 20px;color: #0cbb0cb3;"></i></p>';
                 } else {
-                    return '<i class="fa fa-times-circle" style="font-size: 20px;color: #ff0000b5;"></i>';
+                    return '<p style="text-align:center; margin-bottom:0px; line-height:0px;"><i class="fa fa-times-circle" style="font-size: 20px;color: #ff0000b5;"></i></p>';
                 }
             })
             ->editColumn('total', function ($dailyVisit) {

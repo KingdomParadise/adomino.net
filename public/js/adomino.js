@@ -1,4 +1,6 @@
 $(function () {
+    $(".alert").delay(3000).slideUp(300);
+    moment.tz.setDefault("Europe/Vienna");
     var baseUrl = $('meta[name="base-url"]').attr('content');
     var csrfToken = $('meta[name="csrf-token"]').attr('content')
     $.ajaxSetup({
@@ -41,15 +43,20 @@ $(function () {
             columnDefs.push({"orderable": true, "targets": v})
         } else {
             if ($(this).attr('data-width') === undefined) {
+
                 columnDefs.push({
                     "orderable": ($(this).attr('data-sort') == '1') ? true : false,
                     "targets": v,
+                    // "type": "string-locale-mapped-int",
+                    // "orderDataType": "string-locale-mapped-int"
                 })
             } else {
                 columnDefs.push({
                     "orderable": ($(this).attr('data-sort') == '1') ? true : false,
                     "targets": v,
                     "width": $(this).attr('data-width'),
+                    // "type": "string-locale-mapped-int",
+                    // "orderDataType": "string-locale-mapped-int"
                 })
             }
 
@@ -61,40 +68,27 @@ $(function () {
     function getInquirySearchFilers() {
         if ($('.data_table_yajra').attr('data-table-name') !== undefined && $('.data_table_yajra').attr('data-table-name') == 'inquiry-table') {
             // $('.data_table_yajra').attr('data-table-filter', '{"no_of_days":"' + $('input[name="no_of_days"]').val() + '","trashed":"' + $('select[name="trashed"]').val() + '"}');
-            $('.data_table_yajra').attr('data-table-filter', '{"trashed":"' + $('select[name="trashed"]').val() + '"}');
+            $('.data_table_yajra').attr('data-filter', '{"trashed":"' + $('select[name="trashed"]').val() + '"}');
         }
     }
 
     var yajraTable;
+    var searchInputWidth;
 
     function yajraManual() {
+
         yajraTable = $('.data_table_yajra').DataTable({
             processing: true,
-            // responsive: true,
             bLengthChange: false,
             searching: false,
             fixedColumns: true,
             language: {
-                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>wird bearbeitet...'
+                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>'
             },
             oLanguage: getDataTableLanguage(),
             serverSide: true,
             destroy: true,
             ajax: function (data, callback) {
-                // if ($('.data_table_yajra').attr('data-table-name') !== undefined && $('.data_table_yajra').attr('data-table-name') == 'domain-table') {
-                //     $('input[name="is_deleted"]').val(urlParams.get('is_deleted'));
-                //     $('input[name="title"]').val(urlParams.get('title'));
-                //     $('input[name="info_en"]').val(urlParams.get('info_en'));
-                //     $('input[name="info_de"]').val(urlParams.get('info_de'));
-                //     data.filter = '{"info_de": "' + urlParams.get('info_de') + '","info_en": "' + urlParams.get('info_en') + '","title": "' + urlParams.get('title') + '","is_deleted": "' + urlParams.get('is_deleted') + '"}';
-                // } else
-                // if ($('.data_table_yajra').attr('data-table-name') !== undefined && $('.data_table_yajra').attr('data-table-name') == 'statistics-table') {
-                //     $('input[name="is_deleted"]').val(urlParams.get('is_deleted'));
-                //     $('input[name="title"]').val(urlParams.get('title'));
-                //     $('input[name="info_en"]').val(urlParams.get('info_en'));
-                //     $('input[name="info_de"]').val(urlParams.get('info_de'));
-                //     data.filter = '{"from_date": "' + urlParams.get('from_date') + '","to_date": "' + urlParams.get('to_date') + '"}';
-                // }
                 data.filter = $('.data_table_yajra').attr('data-filter');
                 data.search = {regex: false, value: $('#yajraSearch').val()};
                 $.ajax({
@@ -105,6 +99,12 @@ $(function () {
                         $('.data_table_yajra > tbody').html("");
                     },
                     success: function (res) {
+                        if ($('.data_table_yajra').attr('data-table-name') !== undefined && ($('.data_table_yajra').attr('data-table-name') == 'logo-table' || $('.data_table_yajra').attr('data-table-name') == 'not-found-domain-table')) {
+                            $.each(res.data, function (key, value) {
+                                // res.data[key].id = '<p style="text-align: right;margin: 0px">' + (key + 1) + '</p>';
+                                res.data[key].consecutive = '<p style="text-align: right;margin: 0px">' + (key + 1) + '</p>';
+                            })
+                        }
                         $('.data_table_yajra').show();
                         callback(res);
                     }
@@ -115,18 +115,20 @@ $(function () {
             order: ($('.data_table_yajra').attr('data-custom-order') !== undefined) ? [parseInt($('.data_table_yajra').attr('data-custom-order')), ($('.data_table_yajra').attr('data-custom-sort-type') !== undefined) ? $('.data_table_yajra').attr('data-custom-sort-type') : 'desc'] : [1, 'desc'],
             sScrollX: ($('.data_table_yajra').attr('data-scrollable') !== undefined) ? "100%" : false,
             sScrollXInner: ($('.data_table_yajra').attr('data-scrollable') !== undefined) ? "110%" : false,
-            // "lengthMenu": [
-            //     [10, 25, 50, 100, -1],
-            //     [10, 25, 50, 100, 'All']
-            // ],
-            // pageLength: (urlParams.get('per_page') !== undefined) ? parseInt(urlParams.get('per_page')) : parseInt($('.data_table_yajra').attr('data-length')),
             pageLength: parseInt($('.data_table_yajra').attr('data-length')),
             autoWidth: false
-            // responsive: true
         });
+        yajraTable.columns().iterator('column', function (ctx, idx) {
+            if (!$(yajraTable.column(idx).header()).hasClass('no-sort')) {
+                $(yajraTable.column(idx).header()).append('<span class="sort-icon"/>');
+            }
+        });
+        // yajraTable.columns().iterator('column', function (ctx, idx) {
+        //     $(yajraTable.column(idx).header()).append('<span class="sort-icon"/>');
+        // });
     }
 
-    $('#datemask').inputmask('yyyy-mm-dd HH:mm', {'placeholder': 'yyyy-mm-dd HH:mm'})
+    // $('#datemask').inputmask('yyyy-mm-dd HH:mm', {'placeholder': 'yyyy-mm-dd HH:mm'})
 
     $(document).on('click', '.OpenModal', function () {
         var url = $(this).attr('data-href');
@@ -134,7 +136,7 @@ $(function () {
         var formData = new FormData();
         formData.append('id', id);
         var modal_name = $(this).attr('data-name');
-        if (modal_name == 'get-multi-option-modal') {
+        if (modal_name == 'get-multi-option-modal' && (id === undefined || id == '')) {
             if ($(".selectCheckBox:checked").length == 0) {
                 alert('Bitte wählen Sie mindestens 1 Zeile');
                 return false;
@@ -233,7 +235,7 @@ $(function () {
         }
     }
 
-    if ($('#yajraSearch').length !== undefined) {
+    if ($('#yajraSearch').length > 0) {
         var value = $('#yajraSearch').val();
         if (value.length > 0 && $('.data_table_yajra').length > 0) {
             $(document).ready(function () {
@@ -248,6 +250,14 @@ $(function () {
             no_of_days = 1;
         }
         var searchVal = $('#yajraSearch').val();
+        var from_date = "";
+        if ($('.singleDatePicker').length > 0) {
+            $('.data_table_yajra_manual').attr('data-from-date', $('.singleDatePicker').val())
+        }
+
+        if ($('.data_table_yajra_manual').attr('data-from-date') !== undefined) {
+            from_date = $('.data_table_yajra_manual').attr('data-from-date');
+        }
         // $('.data_table_yajra').attr('data-table-filter', '{"no_of_days":' + no_of_days + '}')
         // yajraManual();
         // $('#adominoModal').modal('toggle');
@@ -256,7 +266,7 @@ $(function () {
         // var per_page = $('select[name="per_page"]').val();
         var url = window.location.origin + window.location.pathname;
         // window.location.replace(url + "?from_date=" + startDate + "&to_date=" + endDate + "&per_page=" + per_page);
-        window.location.replace(url + "?no_of_days=" + no_of_days + "&search=" + searchVal);
+        window.location.replace(url + "?no_of_days=" + no_of_days + "&from_date=" + from_date + "&search=" + searchVal);
     })
 
     $(document).on('click', '#filterSubmitButton', function () {
@@ -269,15 +279,67 @@ $(function () {
     })
     var manualTable;
     if ($('.data_table_yajra_manual').length > 0) {
-        manualTable = $('.data_table_yajra_manual').DataTable({
+        var dtOptions = {
             bLengthChange: false,
             searching: false,
+            columnDefs: [{
+                'searchable': true,
+                "type": "string-locale-mapped-int",
+                "orderDataType": "string-locale-mapped-int",
+                "targets": [2]
+            }],
             oLanguage: getDataTableLanguage(),
             pageLength: -1,
             paging: false,
-            destroy: true
+            drawCallback: function (settings) {
+                if ($('.data_table_yajra_manual').attr('data-table-name') == 'statistics-table') {
+                    var tableSummary = JSON.parse($('.data_table_yajra_manual').attr('data-summen'));
+                    var row = $('<tr>')
+                        .append('<td colspan="2"></td>')
+                        .append('<td style="display: none"></td>')
+                        .append('<td style="text-align: end">Summen</td>')
+                    $.each(tableSummary, function () {
+                        if (this % 1 === 0) {
+                            row.append('<td style="text-align:right"><b>' + this + '</b></td>')
+                        } else {
+                            row.append('<td style="text-align:right"><b>' + this.toFixed(1) + '</b></td>')
+                        }
+                    })
+                    $('.data_table_yajra_manual tbody').prepend(row);
+                }
+            },
+            destroy: true,
+            order: ($('.data_table_yajra_manual').attr('data-custom-order') !== undefined) ? [parseInt($('.data_table_yajra_manual').attr('data-custom-order')), ($('.data_table_yajra_manual').attr('data-custom-sort-type') !== undefined) ? $('.data_table_yajra_manual').attr('data-custom-sort-type') : 'desc'] : [2, 'asc'],
+            initComplete: function (settings, json) {
+                if ($('.data_table_yajra_manual').attr('data-table-name') !== undefined && ($('.data_table_yajra_manual').attr('data-table-name') == 'statistics-table' || $('.data_table_yajra_manual').attr('data-table-name') == 'domains-table')) {
+                    $('#selectedInfoSpan').text($('#DataTables_Table_0_info').text())
+                    $('#DataTables_Table_0_info').text("")
+                }
+            },
+            autoWidth: ($('.data_table_yajra_manual').attr('data-table-name') == 'statistics-table') ? false : true
+        };
+        if ($('.data_table_yajra_manual').attr('data-table-name') == 'statistics-table') {
+            dtOptions.aaSorting = [];
+            $("#statisticLoader").hide();
+        }
+        manualTable = $('.data_table_yajra_manual').DataTable(dtOptions);
+        manualTable.columns().iterator('column', function (ctx, idx) {
+            if (!$(manualTable.column(idx).header()).hasClass('no-sort')) {
+                $(manualTable.column(idx).header()).append('<span class="sort-icon"/>');
+            }
         });
     }
+
+    $(document).on('click', '.data_table_yajra_manual thead th', function () {
+        var tableData = [];
+        $.each(manualTable.rows().data(), function (key, value) {
+            var data = $(this);
+            data[0] = '<p style="text-align: right;margin: 0px">' + (key + 1) + '</p>';
+            tableData.push(data)
+        })
+        manualTable.clear();
+        manualTable.rows.add(tableData).draw()
+    })
 
     if ($('.data_table_yajra').length > 0) {
         if ($('.data_table_yajra').attr('data-table-show') !== undefined && $('.data_table_yajra').attr('data-table-show') == '1') {
@@ -333,11 +395,33 @@ $(function () {
     }
 
     $('#yajraSearch,input[name="no_of_days"]').keypress(function (e) {
-        if (e.which == 13)
-            $('#filterStatisticsButton').click();
+        if (e.which == 13) {
+            if ($('#filterStatisticsButton').length > 0) {
+                $('#filterStatisticsButton').click();
+            } else {
+                $('.yajraBtnSearch').click();
+            }
+        }
     });
 
     $('#deleteLogoButton').click(function () {
         $('#preview_logo').remove();
+        $('#file_name').text('No file selected');
+        $('#delete-confirmation-modal').modal('toggle')
     })
+
+    if ($('#clock').length > 0) {
+        setInterval(time, 500)
+    }
+
+    if ($('.created_at_inquiry').length > 0) {
+        setInterval(function () {
+            $('.created_at_inquiry').val(moment().format('YYYY-MM-DD HH:mm'))
+        }, 500)
+    }
+
+    function time() {
+        var clock = document.getElementById('clock');
+        clock.innerHTML = moment().format('HH:mm:ss');
+    }
 })
